@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 56" role="img" aria-label="VeriCampus — Vérification de diplômes">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E7D1A0"/>
+      <stop offset="100%" stop-color="#C9A86A"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#23265A"/>
+      <stop offset="100%" stop-color="#1B1D3B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- MARK 44x44 -->
+  <g transform="translate(4,6)">
+    <!-- fond -->
+    <rect width="44" height="44" rx="13" fill="url(#navy)" stroke="#C9A86A" stroke-opacity="0.35"/>
+    <rect width="44" height="44" rx="13" fill="none" stroke="white" stroke-opacity="0.06"/>
+    <!-- anneau fin or -->
+    <rect x="1.5" y="1.5" width="41" height="41" rx="11.5" fill="none" stroke="url(#gold)" stroke-opacity="0.35" stroke-width="0.9"/>
+    <!-- bouclier -->
+    <path d="M22 8.5 L31.2 12.8 V20.6 C31.2 26.2 28 31 22 34.2 C16 31 12.8 26.2 12.8 20.6 V12.8 Z" fill="#0F1230" stroke="url(#gold)" stroke-width="1.4" stroke-linejoin="round"/>
+    <!-- inner shield highlight -->
+    <path d="M22 9.8 L30 13.5 V20.6 C30 25.6 27.2 30 22 33 C16.8 30 14 25.6 14 20.6 V13.5 Z" fill="none" stroke="white" stroke-opacity="0.07" stroke-width="0.8"/>
+    <!-- graduation cap -->
+    <g transform="translate(22,13.5)">
+      <!-- plateau -->
+      <path d="M0 -5.2 L-10.2 -1.2 L0 2.8 L10.2 -1.2 Z" fill="url(#gold)"/>
+      <path d="M0 -5.2 L-10.2 -1.2 L0 2.8 L10.2 -1.2 Z" fill="none" stroke="#8C6A2B" stroke-width="0.35" stroke-linejoin="round"/>
+      <!-- gland -->
+      <path d="M9.2 -0.8 L9.2 3.2" stroke="#C9A86A" stroke-width="0.9" stroke-linecap="round"/>
+      <circle cx="9.2" cy="4.2" r="1.35" fill="#C9A86A" stroke="#8C6A2B" stroke-width="0.4"/>
+      <!-- base calotte -->
+      <path d="M-7.2 -0.2 L-7.2 1.6 C-7.2 1.6 -3.8 3.2 0 3.2 C3.8 3.2 7.2 1.6 7.2 1.6 L7.2 -0.2" fill="#1B1D3B" stroke="#C9A86A" stroke-width="0.7" stroke-linejoin="round"/>
+      <path d="M-7.2 -0.2 L0 2.1 L7.2 -0.2" fill="none" stroke="white" stroke-opacity="0.18" stroke-width="0.5"/>
+    </g>
+    <!-- check sceau -->
+    <g transform="translate(22,26.2)">
+      <circle r="6.2" fill="#C9A86A" stroke="#8C6A2B" stroke-width="0.5"/>
+      <circle r="5.2" fill="none" stroke="white" stroke-opacity="0.9" stroke-width="0.55"/>
+      <path d="M-2.6 0.3 L-0.4 2.4 L2.9 -1.9" fill="none" stroke="#1B1D3B" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+
+  <!-- WORDMARK -->
+  <g font-family="Cormorant Garamond, Georgia, serif">
+    <text x="56" y="28.5" font-size="26" font-weight="700" letter-spacing="-0.7" fill="#1B1D3B">Veri<tspan fill="#7A1C1C">Campus</tspan></text>
+  </g>
+  <g font-family="Inter, system-ui, sans-serif">
+    <text x="56.5" y="40.5" font-size="7.2" font-weight="700" letter-spacing="3.1" fill="#8A8696">VÉRIFICATION • BLOCKCHAIN • CONFIANCE</text>
+  </g>
+
+  <!-- BADGE RDC -->
+  <g transform="translate(234,14)">
+    <rect width="42" height="18" rx="9" fill="#1B1D3B"/>
+    <rect width="42" height="18" rx="9" fill="none" stroke="#C9A86A" stroke-opacity="0.4"/>
+    <text x="21" y="12.2" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.8" font-weight="800" letter-spacing="1.4" fill="#C9A86A">RDC • 2026</text>
+  </g>
+</svg>
