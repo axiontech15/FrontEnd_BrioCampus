@@ -1,0 +1,264 @@
+/* ========================
+  RESPONSIVE CSS - BioCampus
+   Breakpoints: 480px, 768px, 1024px
+======================== */
+
+/* ---- TABLET & MOBILE (max-width: 1024px) ---- */
+@media (max-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+    padding: 0 var(--spacing-4);
+  }
+}
+
+/* ---- TABLET (max-width: 900px) ---- */
+@media (max-width: 900px) {
+  .hero-section {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+  .hero-section > div:last-child {
+    display: none;
+  }
+  .hero-stats {
+    justify-content: center;
+  }
+  .d-flex.justify-content-between.align-items-end {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: var(--spacing-4);
+  }
+  .step-container {
+    flex-direction: column !important;
+  }
+}
+
+/* ---- MOBILE (max-width: 768px) ---- */
+@media (max-width: 768px) {
+  /* Header: show hamburger, hide desktop nav */
+  .header-nav {
+    display: none !important;
+  }
+  .hamburger {
+    display: flex !important;
+  }
+  .header-actions-desktop {
+    display: none !important;
+  }
+
+  /* Grid: 1 column */
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Section padding */
+  .section-padding {
+    padding: var(--spacing-8) var(--spacing-4);
+  }
+
+  /* Hero */
+  .hero-title {
+    font-size: 32px !important;
+  }
+
+  .section-title {
+    font-size: 24px !important;
+  }
+
+  /* Flex stacking */
+  .d-flex:not(.no-stack):not(.filter-tabs) {
+    flex-wrap: wrap;
+  }
+
+  /* Buttons stacking */
+  .btn-group-responsive {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-group-responsive .btn {
+    width: 100%;
+  }
+
+  /* CTA banners */
+  .cta-banner {
+    flex-direction: column !important;
+    text-align: center;
+    gap: var(--spacing-6) !important;
+  }
+  .cta-banner .d-flex {
+    justify-content: center;
+  }
+
+  /* Tables: card layout */
+  .table-container {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    margin-bottom: var(--spacing-4);
+    background-color: var(--bc-surface);
+    border: 1px solid var(--bc-border);
+    border-radius: var(--bc-radius-md);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .table td {
+    border: none;
+    padding: var(--spacing-1) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--bc-slate);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: var(--spacing-2);
+  }
+
+  .table td:last-child {
+    margin-top: var(--spacing-3);
+    padding-top: var(--spacing-3);
+    border-top: 1px solid var(--bc-border);
+    justify-content: flex-start;
+  }
+
+  /* Dashboard hero */
+  .db-hero {
+    min-height: 180px !important;
+    padding: var(--spacing-6) !important;
+  }
+  .db-hero h2 {
+    font-size: 20px !important;
+  }
+
+  /* Dashboard cards strip */
+  .db-cards-strip {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Page title row */
+  .page-title-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: var(--spacing-3) !important;
+  }
+
+  /* History filters */
+  .history-filters {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: var(--spacing-3);
+  }
+
+  /* Auth pages */
+  .auth-container {
+    padding: var(--spacing-4) !important;
+    max-width: 100% !important;
+  }
+
+  /* Footer grid */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-8);
+  }
+
+  /* Stat items */
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: var(--spacing-4) !important;
+  }
+
+  /* Profile grid */
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Tickets grid */
+  .tickets-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* margin helpers on mobile */
+  .mt-md-0 {
+    margin-top: 0 !important;
+  }
+  .mb-md-4 {
+    margin-bottom: var(--spacing-4) !important;
+  }
+}
+
+/* ---- SMALL MOBILE (max-width: 480px) ---- */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--spacing-3);
+  }
+
+  .hero-title {
+    font-size: 26px !important;
+  }
+
+  .btn-lg {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: 14px;
+  }
+
+  .card {
+    padding: var(--spacing-4);
+  }
+
+  .dashboard-header-bar {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: var(--spacing-2);
+  }
+
+  .db-stat-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+}
+
+/* ---- DESKTOP (min-width: 769px) ---- */
+@media (min-width: 769px) {
+  .d-md-flex {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* ---- LARGE DESKTOP (min-width: 1200px) ---- */
+@media (min-width: 1200px) {
+  .container {
+    padding: 0 var(--spacing-8);
+  }
+}

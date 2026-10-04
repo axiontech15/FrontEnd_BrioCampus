@@ -1,0 +1,281 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --bc-blue: #1a3dc8;
+  --bc-blue-dark: #0e236f;
+  --bc-blue-soft: #e3e9ff;
+  --bc-blue-mid: #2b4fd8;
+  --bc-gold: #f5b01a;
+  --bc-ink: #0b1020;
+  --bc-slate: #5b6478;
+  --bc-border: #dce1ef;
+  --bc-surface: #ffffff;
+  --bc-bg: #f4f7fb;
+  --bc-bg-alt: #e8edf7;
+  --bc-verified: #0e9f6e;
+  --bc-verified-bg: #d6f5e7;
+  --bc-verified-text: #0a6b4a;
+  --bc-pending: #b26a00;
+  --bc-pending-bg: #fff0cc;
+  --bc-failed: #d92d20;
+  --bc-failed-bg: #fde4e1;
+  --bc-radius: 6px;
+  --bc-radius-md: 10px;
+  --bc-radius-lg: 14px;
+  --bc-font-ui: "IBM Plex Sans", sans-serif;
+  --bc-font-title: "Archivo", sans-serif;
+  --bc-font-mono: "IBM Plex Mono", monospace;
+
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  --shadow-sm: 0 1px 3px rgba(11, 16, 32, 0.08);
+  --shadow-md: 0 4px 16px rgba(11, 16, 32, 0.1);
+  --shadow-lg: 0 8px 32px rgba(11, 16, 32, 0.14);
+  --shadow-blue: 0 4px 20px rgba(26, 61, 200, 0.25);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-bounce: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--bc-font-ui);
+  background-color: var(--bc-bg);
+  color: var(--bc-ink);
+  line-height: 1.5;
+  font-size: 14px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Chaque page occupe tout l'écran (largeur + hauteur) — hors connexion/inscription */
+body:not(.page-login):not(.page-register) #root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main,
+#root > .privacy-content,
+#root > .sa-layout {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bc-font-title);
+  color: var(--bc-blue-dark);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--bc-blue);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--bc-blue-dark);
+}
+
+img {
+  max-width: 100%;
+}
+
+.text-mono {
+  font-family: var(--bc-font-mono);
+}
+
+.text-secondary {
+  color: var(--bc-slate);
+}
+
+/* ========================
+   Layout Utilities
+======================== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-6);
+  min-width: 0;
+}
+
+.d-flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.align-items-center {
+  align-items: center;
+}
+.align-items-start {
+  align-items: flex-start;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-1 {
+  flex: 1;
+}
+
+.gap-2 {
+  gap: var(--spacing-2);
+}
+.gap-3 {
+  gap: var(--spacing-3);
+}
+.gap-4 {
+  gap: var(--spacing-4);
+}
+.gap-6 {
+  gap: var(--spacing-6);
+}
+.gap-8 {
+  gap: var(--spacing-8);
+}
+
+.mt-2 {
+  margin-top: var(--spacing-2);
+}
+.mt-4 {
+  margin-top: var(--spacing-4);
+}
+.mt-6 {
+  margin-top: var(--spacing-6);
+}
+.mt-8 {
+  margin-top: var(--spacing-8);
+}
+.mb-2 {
+  margin-bottom: var(--spacing-2);
+}
+.mb-4 {
+  margin-bottom: var(--spacing-4);
+}
+.mb-6 {
+  margin-bottom: var(--spacing-6);
+}
+.mb-8 {
+  margin-bottom: var(--spacing-8);
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+.w-100 {
+  width: 100%;
+}
+
+/* Grid system */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-6);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-6);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-4);
+}
+
+/* ========================
+   Focus / Accessibility
+======================== */
+*:focus-visible {
+  outline: 2px solid var(--bc-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ========================
+   Animations
+======================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
