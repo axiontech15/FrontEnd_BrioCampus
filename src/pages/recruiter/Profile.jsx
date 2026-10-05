@@ -64,7 +64,7 @@ export default function Profile() {
         </nav>
         <div className="d-flex align-items-center gap-3">
           <span className="inline-style-c77ce71d"><span className="ticket-count-num">{tickets}</span> tickets</span>
-          <Link to="/" className="inline-style-6eed7d64" title="Déconnexion">
+          <Link to="/login" className="sa-icon-btn-danger" title="Déconnexion">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
             </svg>
@@ -90,7 +90,7 @@ export default function Profile() {
               <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
             </div>
           </details>
-          <div className="inline-style-a8b228df"><Link to="/" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
+          <div className="inline-style-a8b228df"><Link to="/login" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
         </div>
       </div>
 
@@ -227,7 +227,7 @@ export default function Profile() {
           <p className="text-secondary mb-4 inline-style-b84c7dfa">Ces actions sont irréversibles. Agissez avec
             précaution.</p>
           <div className="d-flex gap-3 inline-style-407bbb32">
-            <Link to="/" className="btn btn-danger-outline btn-sm" onClick={() => navigate('/')}>
+            <Link to="/login" className="btn btn-danger-outline btn-sm" onClick={() => navigate('/login')}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
               </svg>
