@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AdminLayout from './AdminLayout';
 import { useApp } from '../../context/AppContext';
+import { IconBolt } from '../../components/icons';
 
 export default function AdminRecruteurs() {
   const { adminRecruteurs, setAdminRecruteurs, setAdminPurchases, logAdmin } = useApp();
@@ -40,7 +41,7 @@ export default function AdminRecruteurs() {
         </div>
       </div>
       <div className="card mb-6">
-        <h4 className="mb-4">⚡ Créditer des tickets (geste admin)</h4>
+        <h4 className="mb-4"><IconBolt size={15} style={{ marginRight: 8, verticalAlign: '-2px' }} />Créditer des tickets (geste admin)</h4>
         <form onSubmit={crediter} className="d-flex gap-4" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <select className="form-control" style={{ maxWidth: 260 }} value={credit.id} onChange={(e) => setCredit({ ...credit, id: e.target.value })} required>
             <option value="">Choisir une entreprise...</option>

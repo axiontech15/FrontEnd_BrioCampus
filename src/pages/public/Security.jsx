@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { Link } from '../../router';
+import {
+  IconBan, IconBank, IconClipboard, IconClock, IconCrosshair, IconDatabase, IconFile,
+  IconGlobe, IconLock, IconMail, IconRefresh, IconShare, IconShield, IconUser,
+} from '../../components/icons';
 
 const MEASURES = [
-  ['🔒', 'Chiffrement AES-256', 'Toutes les données en transit et au repos sont chiffrées. Clés gérées via HSM souverain, rotation régulière.'],
-  ['🌐', 'TLS 1.3 / SSL 2048 bits', 'Protocole standard pour chaque connexion. Aucune donnée ne transite en clair entre vous, BioCampus et les universités.'],
-  ['👤', 'Authentification MFA', 'Multi-facteurs disponible pour les comptes recruteurs et obligatoire pour les rôles sensibles / super-admin.'],
-  ['⏱️', 'Horodatage RFC 3161', 'Chaque rapport de vérification est horodaté par une autorité certifiée : preuve d’intégrité opposable.'],
-  ['📜', 'Audit Logs inaltérables', 'Journal append-only de chaque requête, réponse et action. Consultable depuis Espace Audit & Traçabilité.'],
-  ['🛡️', 'Tests d’intrusion réguliers', 'Pentests et audits par tiers indépendants, ségrégation stricte prod / test / dev, revue de code continue.'],
-  ['💾', 'PCA & Sauvegardes chiffrées', 'Plan de continuité d’activité, sauvegardes quotidiennes chiffrées, restauration testée, uptime 99.9%.'],
-  ['🚫', 'Anti-DDoS & WAF', 'Protection périmétrique, filtrage applicatif, limitation de débit et supervision SOC 24/7.'],
+  [<IconLock />, 'Chiffrement AES-256', 'Toutes les données en transit et au repos sont chiffrées. Clés gérées via HSM souverain, rotation régulière.'],
+  [<IconGlobe />, 'TLS 1.3 / SSL 2048 bits', 'Protocole standard pour chaque connexion. Aucune donnée ne transite en clair entre vous, BioCampus et les universités.'],
+  [<IconUser />, 'Authentification MFA', 'Multi-facteurs disponible pour les comptes recruteurs et obligatoire pour les rôles sensibles / super-admin.'],
+  [<IconClock />, 'Horodatage RFC 3161', 'Chaque rapport de vérification est horodaté par une autorité certifiée : preuve d’intégrité opposable.'],
+  [<IconClipboard />, 'Audit Logs inaltérables', 'Journal append-only de chaque requête, réponse et action. Consultable depuis Espace Audit & Traçabilité.'],
+  [<IconCrosshair />, 'Tests d’intrusion réguliers', 'Pentests et audits par tiers indépendants, ségrégation stricte prod / test / dev, revue de code continue.'],
+  [<IconDatabase />, 'PCA & Sauvegardes chiffrées', 'Plan de continuité d’activité, sauvegardes quotidiennes chiffrées, restauration testée, uptime 99.9%.'],
+  [<IconBan />, 'Anti-DDoS & WAF', 'Protection périmétrique, filtrage applicatif, limitation de débit et supervision SOC 24/7.'],
 ];
 
 const ARCHI = [
@@ -66,7 +70,7 @@ export default function Security() {
         <div className="privacy-hero">
           <div className="container">
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,.12)', padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
-              🛡️ Tech Stack &amp; Sécurité
+              <IconShield size={13} /> Tech Stack &amp; Sécurité
             </div>
             <h1 style={{ color: '#fff', fontSize: 40, margin: '16px 0 12px' }}>Une architecture certifiée au service des exigences publiques et privées</h1>
             <p style={{ color: 'rgba(255,255,255,.75)', fontSize: 16, maxWidth: 720, lineHeight: 1.7 }}>
@@ -95,17 +99,17 @@ export default function Security() {
             <p className="section-subtitle" style={{ maxWidth: 640 }}>La plateforme obéit aux plus hauts standards de confidentialité, d&apos;audits et aux directives de l&apos;ESU en matière de documentation numérique.</p>
             <div className="grid-3">
               <div className="card">
-                <div className="icon-circle">🏛️</div>
+                <div className="icon-circle"><IconBank /></div>
                 <h3 className="mb-2" style={{ fontSize: 18 }}>Source Établissement</h3>
                 <p className="text-secondary" style={{ fontSize: 14 }}>Les informations proviennent directement des universités. Aucune base intermédiaire : chaque réponse est signée par le registre officiel.</p>
               </div>
               <div className="card">
-                <div className="icon-circle">🔗</div>
+                <div className="icon-circle"><IconShield /></div>
                 <h3 className="mb-2" style={{ fontSize: 18 }}>Traçabilité immuable</h3>
                 <p className="text-secondary" style={{ fontSize: 14 }}>Chaque vérification laisse une empreinte cryptographique (hash SHA-256 + horodatage RFC 3161) garantissant l&apos;intégrité de la réponse.</p>
               </div>
               <div className="card">
-                <div className="icon-circle">📄</div>
+                <div className="icon-circle"><IconFile /></div>
                 <h3 className="mb-2" style={{ fontSize: 18 }}>Conformité RGPD &amp; Sécurité</h3>
                 <p className="text-secondary" style={{ fontSize: 14 }}>Architecture selon les standards internationaux. Finalités limitées, minimisation des données, DPO joignable à dpo@BioCampus.cd.</p>
               </div>
@@ -164,7 +168,7 @@ export default function Security() {
                 <span>En cas de violation susceptible d&apos;engendrer un risque, BioCampus notifie les personnes concernées sous 72h (art. 33 RGPD) et consigne l&apos;incident dans les Audit Logs.</span>
               </div>
               <div className="card mt-4">
-                <h4 style={{ fontSize: 14, marginBottom: 8 }}>🔁 Conservation probatoire</h4>
+                <h4 style={{ fontSize: 14, marginBottom: 8 }}><IconRefresh size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Conservation probatoire</h4>
                 <table className="data-table" style={{ marginBottom: 0 }}>
                   <thead><tr><th>Données</th><th>Durée</th></tr></thead>
                   <tbody>
@@ -183,7 +187,7 @@ export default function Security() {
         <section className="section-padding container">
           <div className="grid-2">
             <div className="card">
-              <h3 className="mb-4" style={{ fontSize: 18 }}>🤝 Partage strictement encadré</h3>
+              <h3 className="mb-4" style={{ fontSize: 18 }}><IconShare size={17} style={{ marginRight: 8, verticalAlign: '-3px' }} />Partage strictement encadré</h3>
               <ul style={{ paddingLeft: 20, color: 'var(--bc-slate)', fontSize: 14, lineHeight: 1.9 }}>
                 <li><strong>Universités partenaires :</strong> données candidat uniquement, protocole sécurisé.</li>
                 <li><strong>Paiement :</strong> données bancaires ne transitent jamais par nos serveurs.</li>
@@ -193,7 +197,7 @@ export default function Security() {
               <p className="text-secondary mt-4" style={{ fontSize: 12 }}>Jamais de revente. Tout sous-traitant signe un DPA conforme RGPD.</p>
             </div>
             <div className="card" style={{ background: 'var(--bc-ink)', color: '#fff', border: 'none' }}>
-              <h3 className="mb-2" style={{ color: '#fff', fontSize: 18 }}>📬 Contacter le DPO</h3>
+              <h3 className="mb-2" style={{ color: '#fff', fontSize: 18 }}><IconMail size={17} style={{ marginRight: 8, verticalAlign: '-3px' }} />Contacter le DPO</h3>
               <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14, marginBottom: 16 }}>Brio Consult SARL — Avenue de la Victoire, Gombe, Kinshasa<br />Réponse sous 30 jours ouvrés maximum.</p>
               <div className="d-flex gap-4" style={{ flexWrap: 'wrap' }}>
                 <a href="mailto:dpo@BioCampus.cd" className="btn btn-primary btn-sm">dpo@BioCampus.cd</a>

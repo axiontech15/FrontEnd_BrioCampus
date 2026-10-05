@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from '../../router';
+import { IconBolt, IconFile, IconLock, IconShield, IconSliders, IconUsers } from '../../components/icons';
 
 export default function Landing() {
   const [navOpen, setNavOpen] = useState(false);
@@ -211,7 +212,7 @@ export default function Landing() {
                 assurant de l'authenticité des profils.</p>
             </div>
             <div className="card card-light-blue">
-              <div className="icon-circle inline-style-e9c49365">⚡</div>
+              <div className="icon-circle inline-style-e9c49365"><IconBolt /></div>
               <h3 className="mb-2 inline-style-beab5831">Gain de temps massif</h3>
               <p className="text-secondary inline-style-76674537">Les vérifications traditionnelles prenaient des
                 semaines. BioCampus réduit ce délai à quelques minutes pour un profil référencé, accélérant
@@ -301,13 +302,13 @@ export default function Landing() {
                 selon le rythme de vos campagnes de recrutement sans aucune pression.</p>
             </div>
             <div className="card card-light-blue text-center">
-              <div className="icon-circle mx-auto">👥</div>
+              <div className="icon-circle mx-auto"><IconUsers /></div>
               <h4 className="mb-2">Partage Multi-utilisateurs</h4>
               <p className="text-secondary inline-style-345895de">Un solde unique pour l'entreprise, accessible par
                 l'ensemble de vos recruteurs. Gérez les accès depuis l'espace admin.</p>
             </div>
             <div className="card card-light-blue text-center">
-              <div className="icon-circle mx-auto">📄</div>
+              <div className="icon-circle mx-auto"><IconFile /></div>
               <h4 className="mb-2">Rapports & Export Comptable</h4>
               <p className="text-secondary inline-style-345895de">Suivi détaillé et facturation automatique pour
                 l'administration de vos flux RH. Historique des vérifications exportable.</p>
@@ -326,7 +327,7 @@ export default function Landing() {
                 conformité et l'interopérabilité des systèmes d'informations (ESU).</p>
 
               <div className="d-flex align-items-start gap-4 mb-4">
-                <div className="icon-circle inline-style-a8d6d90c">🔒</div>
+                <div className="icon-circle inline-style-a8d6d90c"><IconLock size={16} /></div>
                 <div>
                   <h4 className="inline-style-267f6d50">Chiffrement AES-256 de bout en bout</h4>
                   <p className="text-secondary inline-style-345895de">Chaque donnée transitant sur la plateforme
@@ -334,7 +335,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="d-flex align-items-start gap-4 mb-4">
-                <div className="icon-circle inline-style-a8d6d90c">🛡️</div>
+                <div className="icon-circle inline-style-a8d6d90c"><IconShield size={16} /></div>
                 <div>
                   <h4 className="inline-style-267f6d50">Normes de confidentialité des données</h4>
                   <p className="text-secondary inline-style-345895de">Système conforme aux principes
@@ -342,7 +343,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="d-flex align-items-start gap-4">
-                <div className="icon-circle inline-style-a8d6d90c">⚙️</div>
+                <div className="icon-circle inline-style-a8d6d90c"><IconSliders size={16} /></div>
                 <div>
                   <h4 className="inline-style-267f6d50">Infrastructure Serveurs 99.9% Uptime</h4>
                   <p className="text-secondary inline-style-345895de">Serveurs scalables et redondants pour une

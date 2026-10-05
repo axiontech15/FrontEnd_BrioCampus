@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from '../../router';
+import { IconAlert, IconBolt } from '../../components/icons';
 import { UNIVERSITIES, TICKET_PACKS } from '../../data/mock';
 
 export default function WhyBioCampus() {
@@ -96,7 +97,7 @@ export default function WhyBioCampus() {
                 la vérification manuelle prend des semaines et expose votre marque employeur.
               </p>
               <div className="card card-light-blue mb-4">
-                <h4 className="mb-2">⚠️ Sans BioCampus</h4>
+                <h4 className="mb-2"><IconAlert size={15} style={{ marginRight: 8, verticalAlign: '-2px' }} />Sans BioCampus</h4>
                 <ul style={{ paddingLeft: 20, color: 'var(--bc-slate)', fontSize: 14, lineHeight: 1.8 }}>
                   <li>2 à 6 semaines d&apos;échanges courrier / téléphone avec les scolarités</li>
                   <li>Aucune preuve opposable en cas d&apos;audit (Banque, Santé, ONG)</li>
@@ -171,7 +172,7 @@ export default function WhyBioCampus() {
               <p className="text-secondary" style={{ fontSize: 13 }}>Évitez les scandales liés aux profils frauduleux. Protégez la marque employeur et la crédibilité de votre structure en prouvant l&apos;authenticité de chaque profil.</p>
             </div>
             <div className="card card-light-blue">
-              <div className="icon-circle" style={{ background: '#fff' }}>⚡</div>
+              <div className="icon-circle" style={{ background: '#fff' }}><IconBolt /></div>
               <h3 className="mb-2" style={{ fontSize: 16 }}>Gain de temps massif</h3>
               <p className="text-secondary" style={{ fontSize: 13 }}>Passez de plusieurs semaines à quelques minutes pour un profil référencé. Accélérez votre Time-to-Hire et sécurisez vos viviers de talents.</p>
             </div>

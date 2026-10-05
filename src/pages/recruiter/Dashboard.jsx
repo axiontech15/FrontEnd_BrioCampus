@@ -191,7 +191,7 @@ export default function Dashboard() {
                 souverain.</p>
             </div>
             <Link to="/tickets" className="btn btn-secondary inline-style-8588e44d">
-              Gérer mes tickets ☰
+              Gérer mes tickets →
             </Link>
           </div>
 

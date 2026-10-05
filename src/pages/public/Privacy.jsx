@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Link } from '../../router';
+import {
+  IconBan, IconBox, IconEdit, IconFlag, IconList, IconPause, IconRefresh, IconSearch, IconTrash,
+} from '../../components/icons';
 
 export default function Privacy() {
   const [navOpen, setNavOpen] = useState(false);
@@ -60,7 +63,7 @@ export default function Privacy() {
 
         {/* Table des matières */}
         <div className="toc-box">
-          <h4>📋 Table des matières</h4>
+          <h4><IconList size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Table des matières</h4>
           <ol>
             <li><a href="#responsable">Responsable du traitement</a></li>
             <li><a href="#donnees">Données collectées</a></li>
@@ -208,36 +211,36 @@ export default function Privacy() {
 
         <div className="rights-grid">
           <div className="right-card">
-            <h4>🔍 Droit d'accès</h4>
+            <h4><IconSearch size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit d'accès</h4>
             <p>Vous pouvez demander une copie de toutes les données vous concernant que nous traitons.</p>
           </div>
           <div className="right-card">
-            <h4>✏️ Droit de rectification</h4>
+            <h4><IconEdit size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit de rectification</h4>
             <p>Vous pouvez demander la correction de toute donnée inexacte ou incomplète.</p>
           </div>
           <div className="right-card">
-            <h4>🗑️ Droit à l'effacement</h4>
+            <h4><IconTrash size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit à l'effacement</h4>
             <p>Vous pouvez demander la suppression de vos données (sous réserve des obligations légales de
               conservation).</p>
           </div>
           <div className="right-card">
-            <h4>⏸️ Droit à la limitation</h4>
+            <h4><IconPause size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit à la limitation</h4>
             <p>Vous pouvez demander la limitation du traitement dans certaines circonstances.</p>
           </div>
           <div className="right-card">
-            <h4>📦 Droit à la portabilité</h4>
+            <h4><IconBox size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit à la portabilité</h4>
             <p>Vous pouvez recevoir vos données dans un format structuré et lisible par machine.</p>
           </div>
           <div className="right-card">
-            <h4>🚫 Droit d'opposition</h4>
+            <h4><IconBan size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit d'opposition</h4>
             <p>Vous pouvez vous opposer au traitement fondé sur l'intérêt légitime ou à des fins de prospection.</p>
           </div>
           <div className="right-card">
-            <h4>🔄 Droit de retrait du consentement</h4>
+            <h4><IconRefresh size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit de retrait du consentement</h4>
             <p>Vous pouvez retirer votre consentement à tout moment pour les traitements qui en sont fondés.</p>
           </div>
           <div className="right-card">
-            <h4>⚖️ Droit de réclamation</h4>
+            <h4><IconFlag size={14} style={{ marginRight: 8, verticalAlign: '-2px' }} />Droit de réclamation</h4>
             <p>Vous pouvez introduire une réclamation auprès de l'autorité de protection des données compétente.</p>
           </div>
         </div>
