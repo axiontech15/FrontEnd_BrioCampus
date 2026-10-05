@@ -61,3 +61,9 @@ export const STATUS_BADGE = {
   failed: 'badge-failed',
   incomplete: 'badge-incomplete',
 };
+
+// Comptes de démonstration (email + mot de passe) — même formulaire pour recruteur et admin
+export const USERS = [
+  { email: 'a.dupont@kintalents.cd', password: 'password', name: 'Alexandre Dupont', company: 'Cabinet Kin Talents', role: 'recruteur' },
+  { email: 'admin@biocampus.cd', password: 'admin123', name: 'Admin BioCampus', company: 'BioCampus', role: 'admin' },
+];

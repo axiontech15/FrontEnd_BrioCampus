@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, navigate } from '../router';
-import { useApp } from '../context/AppContext';
+import { Link, navigate } from '../../router';
+import { useApp } from '../../context/AppContext';
 
 export default function Register() {
   const { setUser } = useApp();

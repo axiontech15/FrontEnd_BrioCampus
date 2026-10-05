@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, navigate } from '../router';
-import { useApp } from '../context/AppContext';
+import { Link, navigate } from '../../router';
+import ProfileMenu from './ProfileMenu';
+import { useApp } from '../../context/AppContext';
 
 export default function Profile() {
   const { tickets } = useApp();
@@ -59,11 +60,7 @@ export default function Profile() {
         </Link>
         <nav className="header-nav" id="desktopNav">
           <Link to="/dashboard">Dashboard</Link>
-          <Link to="/verification">Vérifier</Link>
-          <Link to="/tickets">Tickets</Link>
-          <Link to="/downloads">Téléchargements</Link>
-          <Link to="/history">Historique</Link>
-          <Link to="/profile" className="active">Mon profil</Link>
+          <ProfileMenu />
         </nav>
         <div className="d-flex align-items-center gap-3">
           <span className="inline-style-c77ce71d"><span className="ticket-count-num">{tickets}</span> tickets</span>
@@ -82,11 +79,17 @@ export default function Profile() {
           <button className="mobile-nav-close" id="mobileNavClose" onClick={() => setNavOpen(false)}>✕</button>
           <div className="inline-style-1bbc7b92">BioCampus</div>
           <Link to="/dashboard" onClick={() => setNavOpen(false)}>Dashboard</Link>
-          <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
-          <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-          <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
-          <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
           <Link to="/profile" className="active" onClick={() => setNavOpen(false)}>Mon profil</Link>
+          <details className="mobile-modules">
+            <summary>Modules</summary>
+            <div className="mobile-sub">
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
+              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
+              <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
+              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+            </div>
+          </details>
           <div className="inline-style-a8b228df"><Link to="/" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
         </div>
       </div>

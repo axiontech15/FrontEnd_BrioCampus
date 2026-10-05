@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from '../router';
+import { Link } from '../../router';
 
 export default function Privacy() {
   const [navOpen, setNavOpen] = useState(false);

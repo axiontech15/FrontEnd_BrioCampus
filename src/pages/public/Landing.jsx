@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from '../router';
+import { Link } from '../../router';
 
 export default function Landing() {
   const [navOpen, setNavOpen] = useState(false);
@@ -38,8 +38,8 @@ export default function Landing() {
         </Link>
         <nav className="header-nav" id="desktopNav">
           <a href="#fonctionnalites">Fonctionnalités</a>
-          <a href="#pourquoi">Pourquoi BioCampus</a>
-          <a href="#securite">Sécurité</a>
+          <Link to="/pourquoi">Pourquoi BioCampus</Link>
+          <Link to="/securite">Sécurité</Link>
           <Link to="/privacy">Légal</Link>
         </nav>
         <div className="d-flex align-items-center gap-4 header-actions-desktop">
@@ -57,8 +57,8 @@ export default function Landing() {
             <div className="inline-style-5a10b7c8">BioCampus</div>
           </div>
           <a href="#fonctionnalites" onClick={() => setNavOpen(false)}>Fonctionnalités</a>
-          <a href="#pourquoi" onClick={() => setNavOpen(false)}>Pourquoi BioCampus</a>
-          <a href="#securite" onClick={() => setNavOpen(false)}>Sécurité</a>
+          <Link to="/pourquoi" onClick={() => setNavOpen(false)}>Pourquoi BioCampus</Link>
+          <Link to="/securite" onClick={() => setNavOpen(false)}>Sécurité</Link>
           <Link to="/privacy" onClick={() => setNavOpen(false)}>Politique de confidentialité</Link>
           <hr className="inline-style-d2a02b96" />
           <Link to="/login" onClick={() => setNavOpen(false)}>Se connecter</Link>

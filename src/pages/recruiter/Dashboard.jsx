@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link } from '../router';
-import { useApp } from '../context/AppContext';
+import { Link } from '../../router';
+import ProfileMenu from './ProfileMenu';
+import { useApp } from '../../context/AppContext';
 
 export default function Dashboard() {
   const { tickets } = useApp();
@@ -54,7 +55,7 @@ export default function Dashboard() {
         {/* Desktop Nav */}
         <nav className="db-topbar-nav" id="desktopNav">
           <Link to="/dashboard" className="active">Dashboard</Link>
-          <Link to="/profile">Mon profil</Link>
+          <ProfileMenu />
         </nav>
 
         <div className="db-topbar-right">
@@ -98,11 +99,17 @@ export default function Dashboard() {
             <div className="inline-style-65b7efb1">Espace Recruteur</div>
           </div>
           <Link to="/dashboard" className="active" onClick={() => setNavOpen(false)}>Dashboard</Link>
-          <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
-          <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-          <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
-          <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
           <Link to="/profile" onClick={() => setNavOpen(false)}>Mon profil</Link>
+          <details className="mobile-modules">
+            <summary>Modules</summary>
+            <div className="mobile-sub">
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
+              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
+              <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
+              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+            </div>
+          </details>
           <div className="inline-style-b376803d">
             <Link to="/" className="inline-style-50ce3aec" onClick={() => setNavOpen(false)}>Déconnexion</Link>
           </div>

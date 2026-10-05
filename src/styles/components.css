@@ -725,3 +725,128 @@ select.form-control {
   font-size: 16px;
   line-height: 1.6;
 }
+
+/* ========================
+   HEADER DROPDOWN (Mon profil → Modules)
+======================== */
+.nav-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-drop-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+  margin-left: -2px;
+  color: var(--bc-slate);
+  border-radius: 6px;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nav-drop-chevron:hover {
+  color: var(--bc-blue);
+  background-color: var(--bc-blue-soft);
+}
+
+.nav-drop-chevron svg {
+  transition: transform 0.2s ease;
+}
+
+.nav-drop-chevron[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.nav-drop-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 240px;
+  background: var(--bc-surface);
+  border: 1px solid var(--bc-border);
+  border-radius: var(--bc-radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  z-index: 300;
+  animation: fadeIn 0.15s ease;
+}
+
+.nav-drop-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--bc-slate);
+  padding: 8px 12px 4px;
+}
+
+.nav-drop-menu .nav-drop-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--bc-ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nav-drop-menu .nav-drop-link:hover {
+  background-color: var(--bc-blue-soft);
+  color: var(--bc-blue);
+}
+
+.nav-drop-menu .nav-drop-link.active {
+  background-color: var(--bc-blue-soft);
+  color: var(--bc-blue);
+  font-weight: 700;
+}
+
+/* ========================
+   MOBILE PANEL — groupe Modules dépliable
+======================== */
+.mobile-modules {
+  border-radius: var(--bc-radius);
+}
+
+.mobile-modules summary {
+  display: block;
+  padding: var(--spacing-3) var(--spacing-4);
+  color: var(--bc-ink);
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: var(--bc-radius);
+  cursor: pointer;
+  list-style: none;
+}
+
+.mobile-modules summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-modules summary:hover {
+  background-color: var(--bc-blue-soft);
+  color: var(--bc-blue);
+}
+
+.mobile-modules summary::after {
+  content: " ▾";
+  font-size: 12px;
+  color: var(--bc-slate);
+}
+
+.mobile-modules .mobile-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: var(--spacing-4);
+}
+
+.mobile-modules .mobile-sub a {
+  font-size: 14px;
+}
