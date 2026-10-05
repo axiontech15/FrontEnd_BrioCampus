@@ -1,49 +1,51 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Layout } from './components/Layout.jsx'
-import Home from './pages/Home.jsx'
-import Verification from './pages/Verification.jsx'
-import Connexion from './pages/Connexion.jsx'
-import Employeur from './pages/Employeur.jsx'
-import Universite from './pages/Universite.jsx'
-import Badge from './pages/Badge.jsx'
-import Admin from './pages/Admin.jsx'
+import { AppProvider } from './context/AppContext';
+import { Link, useHashRoute } from './router';
+import Landing from './pages/Landing';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Verification from './pages/Verification';
+import Tickets from './pages/Tickets';
+import Downloads from './pages/Downloads';
+import History from './pages/History';
+import Profile from './pages/Profile';
+import Universities from './pages/Universities';
+import Privacy from './pages/Privacy';
+import AuditLogs from './pages/AuditLogs';
 
-function AnimatedRoutes({ showToast }){
-  const location = useLocation()
+function NotFound() {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity:0, y:8 }}
-        animate={{ opacity:1, y:0 }}
-        exit={{ opacity:0, y:-8 }}
-        transition={{ duration:0.28, ease:[0.16,1,0.3,1] }}
-      >
-        <Routes location={location}>
-          <Route path="/" element={<Home showToast={showToast}/>} />
-          <Route path="/verification" element={<Verification showToast={showToast}/>} />
-          <Route path="/connexion" element={<Connexion showToast={showToast}/>} />
-          <Route path="/employeur" element={<Employeur showToast={showToast}/>} />
-          <Route path="/universite" element={<Universite showToast={showToast}/>} />
-          <Route path="/badge" element={<Badge showToast={showToast}/>} />
-          <Route path="/admin" element={<Admin showToast={showToast}/>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
-  )
+    <main className="page-wrap text-center">
+      <h1>404 — Page introuvable</h1>
+      <p className="text-secondary mb-6">La page demandée n&apos;existe pas.</p>
+      <Link to="/" className="btn btn-primary">Retour à l&apos;accueil</Link>
+    </main>
+  );
 }
 
-export default function App(){
-  const [toast, setToast] = useState(null)
-  const showToast = (msg)=>{ setToast(msg); setTimeout(()=>setToast(null),2800) }
+function Shell() {
+  const path = useHashRoute();
+  switch (path) {
+    case '/': return <Landing />;
+    case '/login': return <Login />;
+    case '/register': return <Register />;
+    case '/dashboard': return <Dashboard />;
+    case '/verification': return <Verification />;
+    case '/tickets': return <Tickets />;
+    case '/downloads': return <Downloads />;
+    case '/history': return <History />;
+    case '/profile': return <Profile />;
+    case '/universites': return <Universities />;
+    case '/privacy': return <Privacy />;
+    case '/audit-logs': return <AuditLogs />;
+    default: return <NotFound />;
+  }
+}
+
+export default function App() {
   return (
-    <BrowserRouter>
-      <Layout toast={toast}>
-        <AnimatedRoutes showToast={showToast} />
-      </Layout>
-    </BrowserRouter>
-  )
+    <AppProvider>
+      <Shell />
+    </AppProvider>
+  );
 }

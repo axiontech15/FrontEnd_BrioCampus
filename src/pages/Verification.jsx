@@ -1,225 +1,327 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Fingerprint, Landmark, ShieldCheck, Loader2, BadgeCheck, Clock3, AlertTriangle, Copy, QrCode, ArrowRight, Link2, Sparkles, ChevronRight } from 'lucide-react'
-import { DIPLOMES, UNIVERSITES, statusConfig } from '../data/mock'
+import { useEffect, useState } from 'react';
+import { Link } from '../router';
+import { useApp } from '../context/AppContext';
 
-const IMG_VERIFY = "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80"
-const IMG_DIPLOMA_CLOSE = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80"
+export default function Verification() {
+  const { tickets, setTickets } = useApp();
+  const [navOpen, setNavOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [selected, setSelected] = useState(null);
 
-function QrSvg({ size=140 }){
-  const cells = Array.from({length:625}, (_,i)=>{
-    const x=i%25, y=Math.floor(i/25)
-    if((x<7&&y<7)||(x>17&&y<7)||(x<7&&y>17)) return null
-    return ((x*13+y*37+11)%7)<3 ? 1:0
-  })
-  return (
-    <svg width={size} height={size} viewBox="0 0 25 25" className="rounded-2xl bg-white p-2 border border-[#E9DDCB] shadow-sm block shrink-0">
-      <rect width="25" height="25" fill="white" rx="1"/>
-      {[[0,0],[18,0],[0,18]].map(([ox,oy],k)=>(
-        <g key={k}>
-          <rect x={ox} y={oy} width={7} height={7} fill="#1B1D3B" rx={0.5}/>
-          <rect x={ox+1} y={oy+1} width={5} height={5} fill="white"/>
-          <rect x={ox+2} y={oy+2} width={3} height={3} fill="#1B1D3B"/>
-        </g>
-      ))}
-      {cells.map((v,i)=>{
-        if(v===null) return null
-        const x=i%25, y=Math.floor(i/25)
-        if((x<8&&y<8)||(x>16&&y<8)||(x<8&&y>16)) return null
-        return v ? <rect key={i} x={x} y={y} width={1} height={1} fill="#1B1D3B"/>:null
-      })}
-      <rect x={11} y={11} width={3} height={3} fill="#7A1C1C" rx={0.5}/>
-    </svg>
-  )
-}
+  useEffect(() => {
+    document.body.style.overflow = navOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [navOpen]);
 
-export default function Verification({ showToast }){
-  const [form, setForm] = useState({ matricule:'', universite:'', annee:'' })
-  const [loading, setLoading] = useState(false)
-  const [result, setResult]=useState(null)
-  const [copied, setCopied]=useState(false)
+  const goToStep = (n) => setStep(n);
 
-  const handleVerify = (e)=>{
-    e?.preventDefault()
-    if(!form.matricule.trim()||!form.universite||!form.annee){ showToast('Veuillez remplir tous les champs.'); return }
-    setLoading(true); setResult(null)
-    setTimeout(()=>{
-      const found = DIPLOMES.find(d=> d.matricule.toLowerCase()===form.matricule.trim().toLowerCase() || d.matricule.toLowerCase().includes(form.matricule.trim().toLowerCase()))
-      let data=null
-      if(found){
-        const mismatch = (form.universite && found.universiteId!==form.universite) || (form.annee && found.annee!==form.annee)
-        data = mismatch ? {...found, statut:'anomalie', mismatch:true} : found
-      } else data={statut:'anomalie', notFound:true, matricule:form.matricule}
-      setResult(data); setLoading(false)
-      setTimeout(()=>document.getElementById('verif-result')?.scrollIntoView({behavior:'smooth', block:'start'}),80)
-    },1500)
-  }
+  const selectCandidate = (name, etab, fac, mat) => {
+    setSelected({ name, etab, fac, mat });
+    setStep(3);
+  };
 
-  const useExample=(d)=> {
-    setForm({matricule:d.matricule, universite:d.universiteId, annee:d.annee})
-    window.scrollTo({top:0, behavior:'smooth'})
-    setTimeout(()=>document.getElementById('verif-form')?.scrollIntoView({behavior:'smooth', block:'start'}),100)
-  }
+  const confirmVerification = () => {
+    setTickets((t) => Math.max(0, t - 1));
+    setStep(4);
+  };
 
-  const ResultCard=()=>{
-    if(!result) return null
-    const isValide=result.statut==='validé', isAttente=result.statut==='en_attente'
-    const wrap = (el) => <motion.div initial={{opacity:0, y:10, scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.45, ease:[0.16,1,0.3,1]}}>{el}</motion.div>
-    if(isValide) return wrap(
-      <div id="verif-result" className="rounded-[20px] md:rounded-[24px] border border-[#B7DDC9] bg-[#F4FAF6] p-4 sm:p-6 md:p-7 shadow-sm animate-scaleIn">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="hidden sm:flex h-11 w-11 rounded-full bg-[#1B4A3A] text-white items-center justify-center shadow shrink-0 animate-float"><BadgeCheck size={22}/></div>
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B4A3A] text-white px-3 py-1.5 text-xs font-bold shadow"><span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"/> Validé • Blockchain confirmée</span>
-              <span className="text-xs text-[#6B6575] whitespace-nowrap">Bloc #{result.blockHeight}</span>
-            </div>
-            <h3 className="serif mt-3 text-base sm:text-[19px] font-bold text-[#1B1D3B] leading-tight">{result.nom}</h3>
-            <p className="text-xs sm:text-sm text-[#3A3850] mt-1 leading-relaxed">{result.type} — {result.filiere} • {result.universite} • {result.annee} • {result.mention}</p>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
-              <div className="rounded-xl bg-white border border-[#E9DDCB] p-3 shadow-sm hover-lift"><div className="text-[#6B6575] text-xs">Matricule</div><div className="mono font-semibold text-sm mt-0.5 break-all">{result.matricule}</div></div>
-              <div className="rounded-xl bg-white border border-[#E9DDCB] p-3 shadow-sm hover-lift"><div className="text-[#6B6575] text-xs">Hash tronqué</div><div className="mono font-semibold flex items-center gap-1.5 text-sm mt-0.5">{result.hash} <button onClick={()=>{navigator.clipboard.writeText(result.hashFull); setCopied(true); setTimeout(()=>setCopied(false),1200)}} className="p-1.5 hover:bg-[#F2EDE6] rounded shrink-0 transition hover:scale-110"><Copy size={12}/></button>{copied && <span className="text-[#1B4A3A] text-xs animate-fadeIn">copié</span>}</div></div>
-              <div className="rounded-xl bg-white border border-[#E9DDCB] p-3 shadow-sm hover-lift"><div className="text-[#6B6575] text-xs">Émis le</div><div className="font-semibold text-sm mt-0.5">{result.dateEmission}</div></div>
-            </div>
-            <div className="mt-4 flex flex-col xs:flex-row flex-wrap gap-2">
-              <Link to="/badge" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1B1D3B] text-white px-5 py-3 text-sm font-bold hover:bg-[#23265a] shadow w-full xs:w-auto hover:scale-[1.02] active:scale-[0.98] transition"><QrCode size={16}/> Voir le badge <ArrowRight size={14}/></Link>
-              <button onClick={()=>showToast('Lien copié')} className="inline-flex items-center justify-center gap-2 rounded-full bg-white border border-[#E9DDCB] px-4 py-3 text-sm font-medium hover:bg-[#F2EDE6] w-full xs:w-auto transition hover:scale-[1.02]"><Link2 size={16}/> Partager</button>
-            </div>
-          </div>
-          <div className="hidden sm:block shrink-0 animate-float"><QrSvg size={108}/></div>
-          <div className="sm:hidden flex justify-center pt-2 animate-float"><QrSvg size={140}/></div>
-        </div>
-      </div>
-    )
-    if(isAttente) return wrap(
-      <div id="verif-result" className="rounded-[20px] md:rounded-[24px] border border-[#E9DDCB] bg-[#FFFBF5] p-4 sm:p-6 shadow-sm animate-slideUp">
-        <div className="flex gap-3 sm:gap-4"><div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-[#C9A86A] text-white flex items-center justify-center shadow shrink-0 animate-pulse"><Clock3 size={20}/></div><div className="min-w-0"><h3 className="font-bold text-sm sm:text-base">En attente de certification</h3><p className="text-xs sm:text-sm text-[#3A3850] mt-1 leading-relaxed">Le diplôme de <b>{result.nom}</b> existe mais n'a pas encore été ancré par l'université.</p></div></div>
-      </div>
-    )
-    return wrap(
-      <div id="verif-result" className="rounded-[20px] md:rounded-[24px] border border-[#E8B4B4] bg-[#FFF5F5] p-4 sm:p-6 shadow-sm animate-slideUp">
-        <div className="flex gap-3 sm:gap-4"><div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-[#7A1C1C] text-white flex items-center justify-center shadow shrink-0"><AlertTriangle size={20}/></div><div className="flex-1 min-w-0"><h3 className="font-bold text-sm sm:text-base">Anomalie — aucune correspondance</h3>{result.notFound ? <p className="text-xs sm:text-sm mt-1 leading-relaxed">Aucun diplôme pour <span className="mono font-semibold break-all">{result.matricule}</span>.</p> : result.mismatch ? <p className="text-xs sm:text-sm mt-1 leading-relaxed">Matricule existant mais université/année ne correspondent pas.</p> : <p className="text-xs sm:text-sm mt-1">Hash invalide ou révoqué.</p>}<div className="mt-3 inline-flex items-center gap-2 text-xs font-medium bg-white border border-[#E8B4B4] text-[#7A1C1C] rounded-full px-3 py-1.5 shadow-sm"><Fingerprint size={14}/> Empreinte non retrouvée</div></div></div>
-      </div>
-    )
-  }
+  const dotClass = (n) => (n < step ? 'step-dot done' : n === step ? 'step-dot active' : 'step-dot');
+  const itemClass = (n) => (n < step ? 'step-item done' : n === step ? 'step-item active' : 'step-item');
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      {/* Bannière - responsive */}
-      <motion.div initial={{opacity:0, y:10}} animate={{opacity:1,y:0}} transition={{duration:0.5}} className="rounded-[20px] md:rounded-[24px] overflow-hidden border border-[#E9DDCB] relative shadow-sm">
-        <img src={IMG_VERIFY} alt="Vérification VeriCampus" className="absolute inset-0 w-full h-full object-cover block"/>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1B1D3B]/90 via-[#1B1D3B]/70 to-[#1B1D3B]/20 sm:to-[#1B1D3B]/15"/>
-        <div className="relative p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 text-white">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-white/70 flex-wrap"><Link to="/" className="hover:text-white">Accueil</Link><ChevronRight size={12} className="text-[#C9A86A] shrink-0"/><span className="text-white font-semibold">Vérification diplôme</span><span className="hidden sm:inline-flex ml-2 items-center gap-1 rounded-full bg-white/15 border border-white/20 px-2.5 py-1 text-[11px] backdrop-blur">Gratuit • Sans compte</span></div>
-            <h1 className="serif mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-bold drop-shadow leading-tight">Vérifiez un diplôme <span className="text-[#C9A86A]">en 2 secondes</span></h1>
-            <p className="text-xs sm:text-sm text-white/80 mt-1 leading-relaxed">Preuve QR infalsifiable VeriCampus • AES-256 • RGPD</p>
+    <>
+      {/* HEADER */}
+      <header className="inline-style-c70b66f1">
+        <Link to="/dashboard" className="inline-style-0dc9c093">
+          <div className="inline-style-af5efa97">
+            <img className="brand-logo-full" src="assets/logo-biocampus.svg" alt="BRIO CAMPUS" />
           </div>
-          <div className="hidden md:flex items-center gap-3 bg-white/95 backdrop-blur rounded-2xl p-3 shadow-lg shrink-0 animate-float">
-            <img src={IMG_DIPLOMA_CLOSE} alt="Diplôme exemple" className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl object-cover border border-[#E9DDCB] shadow block"/>
-            <div className="text-xs leading-tight pr-2 text-[#1B1D3B] whitespace-nowrap"><div className="font-bold">Besoin d'aide ?</div><div className="text-[#6B6575]">contact@vericampus.cd</div></div>
+          <div>
+            <div className="inline-style-11f1cc33">BioCampus</div>
+            <div className="inline-style-1b6872d7">Espace Recruteur</div>
+          </div>
+        </Link>
+        <nav className="header-nav" id="desktopNav">
+          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/verification" className="active">Vérifier</Link>
+          <Link to="/tickets">Tickets</Link>
+          <Link to="/downloads">Téléchargements</Link>
+          <Link to="/history">Historique</Link>
+          <Link to="/profile">Mon profil</Link>
+        </nav>
+        <div className="d-flex align-items-center gap-3">
+          <span className="inline-style-c77ce71d">
+            <span className="ticket-count-num">{tickets}</span> tickets
+          </span>
+          <Link to="/" className="inline-style-6eed7d64" title="Déconnexion">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </Link>
+          <button className={`hamburger${navOpen ? ' open' : ''}`} id="hamburger" onClick={() => setNavOpen((v) => !v)}><span></span><span></span><span></span></button>
+        </div>
+      </header>
+
+      {/* Mobile Overlay */}
+      <div className={`mobile-nav-overlay${navOpen ? ' open' : ''}`} id="mobileNavOverlay" onClick={(e) => { if (e.target === e.currentTarget) setNavOpen(false); }}>
+        <div className="mobile-nav-panel">
+          <button className="mobile-nav-close" id="mobileNavClose" onClick={() => setNavOpen(false)}>✕</button>
+          <div className="inline-style-3330f1d9">BioCampus</div>
+          <Link to="/dashboard" onClick={() => setNavOpen(false)}>Dashboard</Link>
+          <Link to="/verification" className="active" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+          <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
+          <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
+          <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
+          <Link to="/profile" onClick={() => setNavOpen(false)}>Mon profil</Link>
+          <div className="inline-style-a8b228df">
+            <Link to="/" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Layout principal - 1 col mobile, 2 cols desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-6 items-start">
-        {/* Formulaire */}
-        <motion.div id="verif-form" initial={{opacity:0, y:12}} animate={{opacity:1,y:0}} transition={{duration:0.55, delay:0.08}} className="rounded-[20px] md:rounded-[24px] bg-white border border-[#E9DDCB] shadow-sm p-4 sm:p-6 md:p-7 hover-lift">
-          <div className="flex items-start gap-3">
-            <span className="hidden sm:flex h-8 w-8 rounded-xl bg-[#1B1D3B] text-[#C9A86A] items-center justify-center shadow shrink-0"><Search size={14}/></span>
-            <div className="min-w-0">
-              <h2 className="serif text-lg sm:text-[22px] font-bold text-[#1B1D3B] leading-tight">Vérification publique</h2>
-              <p className="text-xs sm:text-sm text-[#6B6575] mt-1 leading-relaxed">Saisie exacte du diplôme. Simulation <span className="mono bg-[#F2EDE6] border border-[#E9DDCB] rounded px-1.5 py-0.5 text-xs break-all">/api/verifyDiploma</span></p>
-            </div>
+      <main className="page-wrap">
+        {/* Page title */}
+        <div className="d-flex justify-content-between align-items-center mb-6 page-title-row">
+          <div>
+            <h1 className="inline-style-7b8fff8f">Vérifier un candidat</h1>
+            <p className="text-secondary inline-style-b84c7dfa">Interrogez les registres universitaires officiels en
+              temps réel.</p>
           </div>
+          <div className="badge badge-blue inline-style-265b0484">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a4 4 0 00-8 0v2" />
+            </svg>
+            <span className="ticket-count-num">{tickets}</span> tickets disponibles
+          </div>
+        </div>
 
-          <form onSubmit={handleVerify} className="mt-4 sm:mt-6 grid gap-3 sm:gap-4">
-            <div>
-              <label className="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#6B6575]">Matricule étudiant *</label>
-              <div className="mt-1.5 relative">
-                <Fingerprint size={16} className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A6] pointer-events-none"/>
-                <input value={form.matricule} onChange={e=>setForm({...form, matricule:e.target.value})} placeholder="ex. UNIKIN-2023-88471" className="w-full rounded-xl sm:rounded-2xl border border-[#E9DDCB] bg-[#FFFBF5] pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 sm:py-3.5 text-sm font-medium placeholder:text-[#9A96A6] focus:bg-white focus:border-[#C9A86A] focus:ring-4 focus:ring-[#C9A86A]/20 outline-none"/>
-              </div>
+        {/* Step indicator */}
+        <div className="inline-style-e8d373c7" id="stepIndicator">
+          <div className={itemClass(1)} id="step-item-1">
+            <div className={dotClass(1)} id="step-dot-1">{1 < step ? '✓' : '1'}</div>
+            <div className="step-label">Recherche</div>
+          </div>
+          <div className={'step-line' + (1 < step ? ' done' : '')} id="step-line-1"></div>
+          <div className={itemClass(2)} id="step-item-2">
+            <div className={dotClass(2)} id="step-dot-2">{2 < step ? '✓' : '2'}</div>
+            <div className="step-label">Résultats</div>
+          </div>
+          <div className={'step-line' + (2 < step ? ' done' : '')} id="step-line-2"></div>
+          <div className={itemClass(3)} id="step-item-3">
+            <div className={dotClass(3)} id="step-dot-3">{3 < step ? '✓' : '3'}</div>
+            <div className="step-label">Confirmation</div>
+          </div>
+          <div className={'step-line' + (3 < step ? ' done' : '')} id="step-line-3"></div>
+          <div className={itemClass(4)} id="step-item-4">
+            <div className={dotClass(4)} id="step-dot-4">{4 < step ? '✓' : '4'}</div>
+            <div className="step-label">Résultat</div>
+          </div>
+        </div>
+
+        <div className="card inline-style-c423fb7d">
+
+          {/* STEP 1: SEARCH */}
+          <div id="searchForm" style={{ display: step === 1 ? 'block' : 'none' }}>
+            <div className="alert alert-info mb-6 inline-style-6381de5d">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                className="inline-style-5b214b83">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              <span>La <strong>recherche est gratuite</strong> et ne consomme pas de ticket. Le ticket n&apos;est
+                utilisé qu&apos;à la confirmation.</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div>
-                <label className="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#6B6575]">Université *</label>
-                <div className="mt-1.5 relative">
-                  <Landmark size={16} className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 text-[#9A96A6] pointer-events-none"/>
-                  <select value={form.universite} onChange={e=>setForm({...form, universite:e.target.value})} className="w-full rounded-xl sm:rounded-2xl border border-[#E9DDCB] bg-[#FFFBF5] pl-9 sm:pl-10 pr-8 py-3 sm:py-3.5 text-sm font-medium focus:bg-white focus:border-[#C9A86A] focus:ring-4 focus:ring-[#C9A86A]/20 outline-none">
-                    <option value="">Sélectionner</option>
-                    {UNIVERSITES.map(u=> <option key={u.id} value={u.id}>{u.sigle} — {u.nom}</option>)}
-                  </select>
+
+            <form id="veriForm" onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
+              <div className="grid-2">
+                <div className="form-group">
+                  <label htmlFor="searchNom" className="form-label">Nom du candidat *</label>
+                  <input type="text" id="searchNom" className="form-control" placeholder="Ex: Dupont" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="searchPrenom" className="form-label">Prénom (Optionnel)</label>
+                  <input type="text" id="searchPrenom" className="form-control" placeholder="Ex: Jean" />
                 </div>
               </div>
-              <div>
-                <label className="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#6B6575]">Année *</label>
-                <select value={form.annee} onChange={e=>setForm({...form, annee:e.target.value})} className="w-full rounded-xl sm:rounded-2xl border border-[#E9DDCB] bg-[#FFFBF5] px-3 sm:px-4 py-3 sm:py-3.5 text-sm font-medium focus:bg-white focus:border-[#C9A86A] focus:ring-4 focus:ring-[#C9A86A]/20 outline-none">
-                  <option value="">Année</option>
-                  {[2023,2022,2021,2020,2019].map(a=> <option key={a} value={String(a)}>{a}</option>)}
+              <div className="form-group">
+                <label htmlFor="searchUniv" className="form-label">Université / Établissement *</label>
+                <select id="searchUniv" className="form-control" required>
+                  <option value="">Sélectionner une université...</option>
+                  <option value="UNIKIN">Université de Kinshasa</option>
+                  <option value="UPC">Université Protestante au Congo</option>
+                  <option value="ISC">Institut Supérieur de Commerce</option>
+                  <option value="UNIKIN-MED">Faculté de Médecine — UNIKIN</option>
                 </select>
               </div>
-            </div>
-            <button type="submit" disabled={loading} className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-[#1B1D3B] px-5 sm:px-6 py-3.5 sm:py-4 text-sm font-bold text-white hover:bg-[#23265a] disabled:opacity-60 shadow-lg w-full">
-              {loading ? <><Loader2 size={18} className="animate-spin shrink-0"/> <span className="truncate">Vérification blockchain…</span></> : <> <ShieldCheck size={18} className="text-[#C9A86A] shrink-0"/> <span>Vérifier l'authenticité</span> <ArrowRight size={16} className="shrink-0 hidden xs:inline"/></>}
-            </button>
-            <div className="text-[11px] sm:text-xs text-[#6B6575] text-center sm:text-left">Réponse &lt; 2s • AES-256 • RGPD • Aucune donnée conservée</div>
-          </form>
-
-          <AnimatePresence>
-          {loading && <motion.div initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} exit={{opacity:0, height:0}} className="mt-5 sm:mt-6 rounded-xl sm:rounded-2xl border border-[#E9DDCB] bg-[#F2EDE6] p-3 sm:p-4 overflow-hidden"><div className="flex items-center gap-2 text-xs sm:text-sm font-medium"><Loader2 size={16} className="animate-spin text-[#1B1D3B] shrink-0"/> <span>Contrôle du hash • Vérification du sceau…</span></div><div className="mt-3 h-2 rounded-full bg-white overflow-hidden shimmer-bar"><div className="h-full w-1/2 bg-[#C9A86A] rounded-full"/></div><img src={IMG_DIPLOMA_CLOSE} alt="" className="mt-3 h-16 sm:h-20 w-full object-cover rounded-xl border border-[#E9DDCB] opacity-60 block"/></motion.div>}
-          </AnimatePresence>
-          <AnimatePresence>
-          {!loading && result && <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mt-5 sm:mt-6">{ResultCard()}</motion.div>}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Sidebar */}
-        <motion.div initial={{opacity:0, y:12}} animate={{opacity:1,y:0}} transition={{duration:0.55, delay:0.16}} className="space-y-4">
-          {/* Exemples - horizontal scroll sur mobile, vertical desktop */}
-          <div className="rounded-[20px] md:rounded-[24px] overflow-hidden bg-white border border-[#E9DDCB] shadow-sm hover-lift">
-            <div className="relative overflow-hidden">
-              <img src={IMG_DIPLOMA_CLOSE} alt="Diplôme VeriCampus" className="h-28 sm:h-32 md:h-36 w-full object-cover block hover:scale-[1.03] transition duration-700"/>
-              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur px-2.5 py-1 rounded-full text-xs font-bold shadow">4 exemples • 3 états</div>
-            </div>
-            <div className="p-4 sm:p-6">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Sparkles size={16} className="text-[#C9A86A] shrink-0"/> Exemples <span className="hidden sm:inline">(cliquez)</span></h3>
-              <p className="text-xs text-[#6B6575] mt-1 hidden sm:block">4 cas pour tester les 3 états VeriCampus.</p>
-              <p className="text-xs text-[#6B6575] mt-1 sm:hidden whitespace-nowrap overflow-hidden text-ellipsis">Tapez pour remplir — 4 cas</p>
-              {/* Mobile: scroll horizontal */}
-              <div className="mt-4 flex sm:grid gap-2.5 overflow-x-auto sm:overflow-visible scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0 snap-x snap-mandatory">
-                {DIPLOMES.map((d,i)=>{
-                  const cfg=statusConfig[d.statut]
-                  return (
-                    <motion.button key={d.matricule} initial={{opacity:0, x:10}} animate={{opacity:1,x:0}} transition={{delay:i*0.07}} whileHover={{scale:1.02}} whileTap={{scale:0.98}} onClick={()=>useExample(d)} className="text-left rounded-2xl border border-[#E9DDCB] bg-[#FFFBF5] hover:bg-white hover:shadow-sm p-3 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 transition shrink-0 sm:shrink w-[280px] sm:w-auto snap-start">
-                      <span className={`h-2.5 w-2.5 rounded-full ${cfg.dot} shrink-0`}/>
-                      <span className="flex-1 min-w-0"><span className="block text-xs sm:text-sm font-semibold truncate">{d.matricule}</span><span className="block text-[11px] sm:text-xs text-[#6B6575] truncate">{d.nom} • {d.sigle} {d.annee}</span></span>
-                      <span className={`text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-1 rounded-full border ${cfg.badge} shrink-0 whitespace-nowrap`}>{cfg.label}</span>
-                    </motion.button>
-                  )
-                })}
+              <div className="form-group">
+                <label htmlFor="searchMatricule" className="form-label">Matricule (Optionnel)</label>
+                <input type="text" id="searchMatricule" className="form-control"
+                  placeholder="Ex: 2021-UNIKIN-04831" />
               </div>
-              <p className="mt-3 text-[11px] text-[#6B6575] hidden sm:block">Astuce : changez l'année pour provoquer une <b>Anomalie</b>.</p>
+              <div className="d-flex justify-content-between align-items-center mt-6">
+                <Link to="/dashboard" className="btn btn-secondary">← Annuler</Link>
+                <button type="submit" className="btn btn-primary">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                  Rechercher le candidat
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* STEP 2: RESULTS */}
+          <div id="searchResults" className="inline-style-93b8ea5b" style={{ display: step === 2 ? 'block' : 'none' }}>
+            <h3 className="mb-2 inline-style-e2151554">Résultats de la recherche</h3>
+            <p className="text-secondary mb-6">Plusieurs candidats correspondent. Sélectionnez le bon profil.</p>
+
+            <div className="grid-2 mb-6">
+              <div className="card card-interactive inline-style-b0554076"
+                onClick={() => selectCandidate('Jean Dupont', 'Université de Kinshasa', 'Faculté des Sciences', 'XXX-4831')}>
+                <div className="inline-style-3e287928">
+                  <div className="avatar inline-style-75ae2969">JD</div>
+                  <span className="badge badge-blue">Sélectionner</span>
+                </div>
+                <h4 className="inline-style-ccc42bed">Jean Dupont</h4>
+                <p className="text-secondary mb-2 inline-style-9bd93d36">Université de Kinshasa</p>
+                <div className="inline-style-b84c7dfa">
+                  <div>Faculté des Sciences</div>
+                  <div className="text-mono mt-2 text-secondary inline-style-9bd93d36">Matricule : XXX-4831</div>
+                </div>
+              </div>
+
+              <div className="card card-interactive"
+                onClick={() => selectCandidate('Jean Dupont', 'Université de Kinshasa', 'Faculté de Droit', 'XXX-1928')}>
+                <div className="inline-style-3e287928">
+                  <div className="avatar inline-style-1062f51b">JD</div>
+                  <span className="badge badge-incomplete">Sélectionner</span>
+                </div>
+                <h4 className="inline-style-ccc42bed">Jean Dupont</h4>
+                <p className="text-secondary mb-2 inline-style-9bd93d36">Université de Kinshasa</p>
+                <div className="inline-style-b84c7dfa">
+                  <div>Faculté de Droit</div>
+                  <div className="text-mono mt-2 text-secondary inline-style-9bd93d36">Matricule : XXX-1928</div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" className="btn btn-secondary" onClick={() => goToStep(1)}>← Nouvelle recherche</button>
+          </div>
+
+          {/* STEP 3: CONFIRMATION */}
+          <div id="confirmationStep" className="inline-style-93b8ea5b" style={{ display: step === 3 ? 'block' : 'none' }}>
+            <h3 className="mb-2 inline-style-8d9baaa0">Confirmer la vérification</h3>
+
+            <div className="alert alert-warning mb-6">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                className="inline-style-5b214b83">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <span>Cette vérification utilisera <strong>1 ticket</strong> sur votre solde actuel. Action
+                irréversible.</span>
+            </div>
+
+            <div className="mb-6 inline-style-618a27c2">
+              <h4 className="mb-4 inline-style-736caf54">Profil sélectionné</h4>
+              <div className="grid-2">
+                <div>
+                  <div className="text-secondary inline-style-c07f2ace">Candidat</div>
+                  <div className="inline-style-00bd52c4" id="confName">{selected ? selected.name : 'Jean Dupont'}</div>
+                </div>
+                <div>
+                  <div className="text-secondary inline-style-c07f2ace">Établissement</div>
+                  <div className="inline-style-a5d2baa1" id="confEtab">{selected ? selected.etab : 'Université de Kinshasa'}</div>
+                </div>
+                <div className="mt-4">
+                  <div className="text-secondary inline-style-c07f2ace">Faculté</div>
+                  <div className="inline-style-a5d2baa1" id="confFac">{selected ? selected.fac : 'Faculté des Sciences'}</div>
+                </div>
+                <div className="mt-4">
+                  <div className="text-secondary inline-style-c07f2ace">Matricule</div>
+                  <div className="text-mono inline-style-a5d2baa1" id="confMat">{selected ? selected.mat : 'XXX-4831'}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center">
+              <button type="button" className="btn btn-secondary" onClick={() => goToStep(2)}>← Retour aux
+                résultats</button>
+              <button type="button" className="btn btn-primary" onClick={() => confirmVerification()}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Confirmer la vérification
+              </button>
             </div>
           </div>
 
-          <motion.div initial={{opacity:0}} whileInView={{opacity:1}} viewport={{once:true}} transition={{delay:0.2}} className="rounded-[20px] md:rounded-[24px] bg-[#1B1D3B] text-white p-5 sm:p-6 relative overflow-hidden shadow-sm hover-lift">
-            <img src={IMG_VERIFY} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 block"/>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1B1D3B] to-[#1B1D3B]/80"/>
-            <div className="relative">
-              <h3 className="serif font-bold text-base sm:text-lg">Comment ça marche ?</h3>
-              <ol className="mt-3 sm:mt-4 grid gap-2.5 sm:gap-3 text-xs sm:text-sm text-white/80">
-                <li className="flex gap-3 items-start"><span className="h-7 w-7 rounded-xl bg-[#C9A86A] text-[#1B1D3B] flex items-center justify-center text-xs font-extrabold shadow shrink-0">1</span><span className="leading-relaxed"><b className="text-white">Saisie</b> — l'université a ancré l'empreinte SHA-256.</span></li>
-                <li className="flex gap-3 items-start"><span className="h-7 w-7 rounded-xl bg-[#C9A86A] text-[#1B1D3B] flex items-center justify-center text-xs font-extrabold shadow shrink-0">2</span><span className="leading-relaxed"><b className="text-white">Vérif</b> — comparaison blockchain + registre VeriCampus.</span></li>
-                <li className="flex gap-3 items-start"><span className="h-7 w-7 rounded-xl bg-[#C9A86A] text-[#1B1D3B] flex items-center justify-center text-xs font-extrabold shadow shrink-0">3</span><span className="leading-relaxed"><b className="text-white">Preuve</b> — badge QR horodaté partageable en 1 clic.</span></li>
-              </ol>
-              <Link to="/badge" className="mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#C9A86A] hover:text-white group">Voir un badge exemple <ArrowRight size={14} className="shrink-0 group-hover:translate-x-1 transition"/></Link>
+          {/* STEP 4: RESULT */}
+          <div id="resultStep" className="inline-style-93b8ea5b" style={{ display: step === 4 ? 'block' : 'none' }}>
+            <div className="text-center mb-6">
+              <div className="inline-style-7bdf0e57">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--bc-verified)"
+                  strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <span className="badge badge-verified inline-style-fb3b5cc8">
+                ✓ DIPLÔME VÉRIFIÉ
+              </span>
+              <h2 className="mb-2">Le diplôme a été confirmé</h2>
+              <p className="text-secondary">L&apos;établissement a authentifié le diplôme. Le rapport certifié est prêt au
+                téléchargement.</p>
             </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </div>
-  )
+
+            <div className="mb-6 inline-style-67555ed6">
+              <div className="inline-style-44f0ae66">
+                <h4 className="inline-style-dd7e2806">Licence en économie · 2021</h4>
+                <span className="text-mono text-secondary inline-style-9bd93d36">BC-2026-0483-KIN</span>
+              </div>
+              <div className="inline-style-042b49dd">
+                <div className="grid-2">
+                  <div className="mb-4">
+                    <div className="text-secondary inline-style-643a7cf5">Candidat</div>
+                    <div className="inline-style-a5d2baa1" id="resName">{selected ? selected.name : 'Jean Dupont'}</div>
+                  </div>
+                  <div className="mb-4">
+                    <div className="text-secondary inline-style-643a7cf5">Établissement</div>
+                    <div className="inline-style-a5d2baa1" id="resEtab">{selected ? selected.etab : 'Université de Kinshasa'}</div>
+                  </div>
+                  <div>
+                    <div className="text-secondary inline-style-643a7cf5">Matricule</div>
+                    <div className="text-mono inline-style-a5d2baa1" id="resMat">{selected ? selected.mat : 'XXX-4831'}</div>
+                  </div>
+                  <div>
+                    <div className="text-secondary inline-style-643a7cf5">Date de vérification</div>
+                    <div className="inline-style-a5d2baa1">Aujourd&apos;hui</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-center gap-4">
+              <Link to="/dashboard" className="btn btn-secondary">← Retour au dashboard</Link>
+              <Link to="/downloads" className="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Télécharger le rapport PDF
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </>
+  );
 }
