@@ -486,7 +486,7 @@ body.page-login {
 }
 
 .hero-title {
-  font-size: 48px;
+  font-size: 40px;
   color: var(--bc-ink);
   line-height: 1.1;
   margin-bottom: var(--spacing-4);

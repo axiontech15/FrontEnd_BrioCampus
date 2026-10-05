@@ -14,6 +14,7 @@ import Privacy from './pages/public/Privacy';
 import AuditLogs from './pages/admin/AuditLogs';
 import WhyBioCampus from './pages/public/WhyBioCampus';
 import Security from './pages/public/Security';
+import Features from './pages/public/Features';
 import AdminOverview from './pages/admin/AdminOverview';
 import AdminComptes from './pages/admin/AdminComptes';
 import AdminRecruteurs from './pages/admin/AdminRecruteurs';
@@ -63,6 +64,7 @@ function Shell() {
     case '/audit-logs': return <AuditLogs />;
     case '/pourquoi': return <WhyBioCampus />;
     case '/securite': return <Security />;
+    case '/fonctionnalites': return <Features />;
     case '/admin': return <RequireAdmin><AdminOverview /></RequireAdmin>;
     case '/admin/comptes': return <RequireAdmin><AdminComptes /></RequireAdmin>;
     case '/admin/recruteurs': return <RequireAdmin><AdminRecruteurs /></RequireAdmin>;

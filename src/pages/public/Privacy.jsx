@@ -1,41 +1,13 @@
-import { useState } from 'react';
 import { Link } from '../../router';
+import PublicHeader from './PublicHeader';
 import {
   IconBan, IconBox, IconEdit, IconFlag, IconList, IconPause, IconRefresh, IconSearch, IconTrash,
 } from '../../components/icons';
 
 export default function Privacy() {
-  const [navOpen, setNavOpen] = useState(false);
   return (
     <>
-      {/* HEADER */}
-      <header className="inline-style-c70b66f1">
-        <Link to="/" className="inline-style-0dc9c093">
-          <div className="inline-style-af5efa97">
-            <img className="brand-logo-full" src="assets/logo-biocampus.svg" alt="BRIO CAMPUS" />
-          </div>
-          <div>
-            <div className="inline-style-11f1cc33">BioCampus</div>
-            <div className="inline-style-1b6872d7">Espace Recruteur</div>
-          </div>
-        </Link>
-        <nav className="header-nav" id="desktopNav">
-          <Link to="/">Accueil</Link>
-          <Link to="/login">Connexion</Link>
-          <Link to="/register" className="btn btn-primary btn-sm">Créer un compte</Link>
-        </nav>
-        <button className={navOpen ? 'hamburger open' : 'hamburger'} id="hamburger" onClick={() => setNavOpen(!navOpen)}><span></span><span></span><span></span></button>
-      </header>
-
-      {/* Mobile Overlay */}
-      <div className={navOpen ? 'mobile-nav-overlay open' : 'mobile-nav-overlay'} id="mobileNavOverlay" onClick={(e) => { if (!e.target.closest('.mobile-nav-panel')) setNavOpen(false); }}>
-        <div className="mobile-nav-panel">
-          <button className="mobile-nav-close" id="mobileNavClose" onClick={() => setNavOpen(false)}>✕</button>
-          <Link to="/" onClick={() => setNavOpen(false)}>Accueil</Link>
-          <Link to="/login" onClick={() => setNavOpen(false)}>Connexion</Link>
-          <Link to="/register" onClick={() => setNavOpen(false)}>Créer un compte</Link>
-        </div>
-      </div>
+      <PublicHeader />
 
       {/* HERO */}
       <div className="privacy-hero">

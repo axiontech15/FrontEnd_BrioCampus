@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link } from '../../router';
+import PublicHeader from './PublicHeader';
 import {
   IconBan, IconBank, IconClipboard, IconClock, IconCrosshair, IconDatabase, IconFile,
   IconGlobe, IconLock, IconMail, IconRefresh, IconShare, IconShield, IconUser,
@@ -24,46 +24,9 @@ const ARCHI = [
 ];
 
 export default function Security() {
-  const [navOpen, setNavOpen] = useState(false);
-
   return (
     <>
-      <header className="inline-style-90a91e09">
-        <Link to="/" className="inline-style-0dc9c093">
-          <div className="inline-style-f2f527b7">
-            <img className="brand-logo-full" src="assets/logo-biocampus.svg" alt="BRIO CAMPUS" />
-          </div>
-          <div>
-            <div className="inline-style-c921babc">BioCampus</div>
-            <div className="inline-style-1b282f55">Vérification Académique</div>
-          </div>
-        </Link>
-        <nav className="header-nav" id="desktopNav">
-          <Link to="/pourquoi">Pourquoi BioCampus</Link>
-          <Link to="/securite">Sécurité</Link>
-          <Link to="/universites">Universités</Link>
-          <Link to="/privacy">Légal</Link>
-        </nav>
-        <div className="d-flex align-items-center gap-4 header-actions-desktop">
-          <Link to="/login" className="inline-style-10d016c9">Connexion</Link>
-          <Link to="/register" className="btn btn-primary inline-style-aef0d252">Créer un compte →</Link>
-        </div>
-        <button className={`hamburger${navOpen ? ' open' : ''}`} onClick={() => setNavOpen(v => !v)} aria-label="Menu"><span></span><span></span><span></span></button>
-      </header>
-
-      <div className={`mobile-nav-overlay${navOpen ? ' open' : ''}`} onClick={(e) => { if (!e.target.closest('.mobile-nav-panel')) setNavOpen(false); }}>
-        <div className="mobile-nav-panel">
-          <button className="mobile-nav-close" onClick={() => setNavOpen(false)}>✕</button>
-          <div className="inline-style-e079e06f"><div className="inline-style-5a10b7c8">BioCampus</div></div>
-          <Link to="/" onClick={() => setNavOpen(false)}>Accueil</Link>
-          <Link to="/pourquoi" onClick={() => setNavOpen(false)}>Pourquoi BioCampus</Link>
-          <Link to="/securite" onClick={() => setNavOpen(false)}>Sécurité</Link>
-          <Link to="/privacy" onClick={() => setNavOpen(false)}>Légal</Link>
-          <hr className="inline-style-d2a02b96" />
-          <Link to="/login" onClick={() => setNavOpen(false)}>Se connecter</Link>
-          <Link to="/register" className="inline-style-e437daab" onClick={() => setNavOpen(false)}>Créer un compte</Link>
-        </div>
-      </div>
+      <PublicHeader />
 
       <main>
         {/* HERO */}
