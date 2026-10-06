@@ -39,7 +39,7 @@ export default function Verification() {
           </div>
           <div>
             <div className="inline-style-11f1cc33">BioCampus</div>
-            <div className="inline-style-1b6872d7">Espace Recruteur</div>
+            <div className="inline-style-1b6872d7">Espace RH</div>
           </div>
         </Link>
         <nav className="header-nav" id="desktopNav">
@@ -69,11 +69,10 @@ export default function Verification() {
           <details className="mobile-modules">
             <summary>Modules</summary>
             <div className="mobile-sub">
-              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Recherche diplômé</Link>
               <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
               <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
-              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+              <Link to="/profiles" onClick={() => setNavOpen(false)}>Profils équipe</Link>
             </div>
           </details>
           <div className="inline-style-a8b228df">
@@ -86,7 +85,7 @@ export default function Verification() {
         {/* Page title */}
         <div className="d-flex justify-content-between align-items-center mb-6 page-title-row">
           <div>
-            <h1 className="inline-style-7b8fff8f">Vérifier un candidat</h1>
+            <h1 className="inline-style-7b8fff8f">Recherche diplômé</h1>
             <p className="text-secondary inline-style-b84c7dfa">Interrogez les registres universitaires officiels en
               temps réel.</p>
           </div>
@@ -311,7 +310,7 @@ export default function Verification() {
 
             <div className="d-flex justify-content-center gap-4">
               <Link to="/dashboard" className="btn btn-secondary">← Retour au dashboard</Link>
-              <Link to="/downloads" className="btn btn-primary">
+              <Link to="/history" className="btn btn-primary">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="2">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />

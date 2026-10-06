@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Link, navigate } from '../../router';
+import { Link } from '../../router';
 import ProfileMenu from './ProfileMenu';
 import { useApp } from '../../context/AppContext';
+import { ticketsApi } from '../../services/api';
+import { USE_MOCK, formatApiError } from '../../services/config';
 
 export default function Tickets() {
-  const { tickets, setTickets } = useApp();
+  const { tickets, setTickets, adminCategories, purchases, setPurchases } = useApp();
   const [navOpen, setNavOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const packs = (adminCategories || []).filter((c) => c.status === 'ACTIVE');
 
   useEffect(() => {
     const els = document.querySelectorAll('.reveal');
@@ -30,18 +35,49 @@ export default function Tickets() {
     return () => { document.body.style.overflow = ''; };
   }, [navOpen]);
 
-  const selectPack = (count, name) => {
-    setSelectedPack({ count, name });
+  const selectPack = (cat) => {
+    setSelectedPack({
+      id: cat.id,
+      count: cat.quantity ?? 1,
+      name: cat.name,
+      description: cat.description || '',
+    });
   };
 
-  const simulatePurchase = () => {
+  const purchase = async () => {
     if (!selectedPack) {
-      alert('Veuillez sélectionner un pack.');
+      setError('Veuillez sélectionner une catégorie / pack.');
       return;
     }
-    setTickets(t => t + selectedPack.count);
-    setShowSuccess(true);
-    setSelectedPack(null);
+    setError('');
+    setLoading(true);
+    try {
+      if (!USE_MOCK) {
+        const result = await ticketsApi.purchase({
+          category_id: selectedPack.id,
+          quantity: selectedPack.count,
+          amount: Math.max(1, selectedPack.count),
+        });
+        if (typeof result.remaining_tickets === 'number') {
+          setTickets(result.remaining_tickets);
+        } else {
+          setTickets((t) => t + selectedPack.count);
+        }
+      } else {
+        setTickets((t) => t + selectedPack.count);
+      }
+      const today = new Date().toLocaleDateString('fr-FR');
+      setPurchases((list) => [
+        { date: today, desc: selectedPack.name, qty: `+${selectedPack.count} tickets`, status: 'Payé' },
+        ...(list || []),
+      ]);
+      setShowSuccess(true);
+      setSelectedPack(null);
+    } catch (err) {
+      setError(formatApiError(err));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +90,7 @@ export default function Tickets() {
           </div>
           <div>
             <div className="inline-style-11f1cc33">BioCampus</div>
-            <div className="inline-style-1b6872d7">Espace Recruteur</div>
+            <div className="inline-style-1b6872d7">Espace RH</div>
           </div>
         </Link>
         <nav className="header-nav" id="desktopNav">
@@ -82,11 +118,10 @@ export default function Tickets() {
           <details className="mobile-modules">
             <summary>Modules</summary>
             <div className="mobile-sub">
-              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Recherche diplômé</Link>
               <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
               <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
-              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+              <Link to="/profiles" onClick={() => setNavOpen(false)}>Profils équipe</Link>
             </div>
           </details>
           <div className="inline-style-a8b228df"><Link to="/login" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
@@ -117,59 +152,45 @@ export default function Tickets() {
           {/* Achat */}
           <div className="card">
             <h3 className="mb-2 inline-style-e2151554">Acheter des tickets</h3>
-            <p className="text-secondary mb-6 inline-style-b84c7dfa">Choisissez un pack adapté à vos besoins de
-              recrutement.</p>
+            <p className="text-secondary mb-6 inline-style-b84c7dfa">
+              Choisissez une catégorie : la quantité du pack est définie par l&apos;administrateur.
+            </p>
+
+            {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
 
             <div className="d-flex flex-column gap-3 mb-6">
-              <div className={selectedPack && selectedPack.name === 'Pack Découverte' ? 'pack-card selected' : 'pack-card'} onClick={() => selectPack(10, 'Pack Découverte')}>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <div className="inline-style-00bd52c4">Pack Découverte</div>
-                    <div className="text-secondary inline-style-9bd93d36">Idéal pour tester la plateforme</div>
-                  </div>
-                  <div className="inline-style-08a0ed40">
-                    <div className="inline-style-ed40432b">10</div>
-                    <div className="inline-style-7ebfadc5">tickets</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className={selectedPack && selectedPack.name === 'Pack Recruteur' ? 'pack-card inline-style-4cb8ceeb selected' : 'pack-card inline-style-4cb8ceeb'} onClick={() => selectPack(50, 'Pack Recruteur')}>
-                <span className="pack-popular">Plus populaire</span>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <div className="inline-style-00bd52c4">Pack Recruteur</div>
-                    <div className="text-secondary inline-style-9bd93d36">Pour les équipes RH actives</div>
-                  </div>
-                  <div className="inline-style-08a0ed40">
-                    <div className="inline-style-ed40432b">50</div>
-                    <div className="inline-style-7ebfadc5">tickets</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className={selectedPack && selectedPack.name === 'Pack Entreprise' ? 'pack-card selected' : 'pack-card'} onClick={() => selectPack(200, 'Pack Entreprise')}>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <div className="inline-style-00bd52c4">Pack Entreprise</div>
-                    <div className="text-secondary inline-style-9bd93d36">Pour les grands volumes de recrutement
+              {packs.length === 0 && (
+                <p className="text-secondary">Aucune catégorie active pour le moment.</p>
+              )}
+              {packs.map((cat, idx) => (
+                <div
+                  key={cat.id}
+                  className={`pack-card${idx === 0 ? ' inline-style-4cb8ceeb' : ''}${selectedPack?.id === cat.id ? ' selected' : ''}`}
+                  onClick={() => selectPack(cat)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') selectPack(cat); }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  {idx === 0 && <span className="pack-popular">Pack</span>}
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div className="inline-style-00bd52c4">{cat.name}</div>
+                      <div className="text-secondary inline-style-9bd93d36">{cat.description || 'Catégorie de tickets'}</div>
+                    </div>
+                    <div className="inline-style-08a0ed40">
+                      <div className="inline-style-ed40432b">{cat.quantity ?? 1}</div>
+                      <div className="inline-style-7ebfadc5">tickets</div>
                     </div>
                   </div>
-                  <div className="inline-style-08a0ed40">
-                    <div className="inline-style-ed40432b">200</div>
-                    <div className="inline-style-7ebfadc5">tickets</div>
-                  </div>
                 </div>
-              </div>
+              ))}
             </div>
 
             <button type="button" className="btn btn-primary inline-style-8588e44d" id="buyBtn"
-              onClick={simulatePurchase}>
-              {selectedPack ? `Acheter — ${selectedPack.name} (${selectedPack.count} tickets)` : (<><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a4 4 0 00-8 0v2" />
-              </svg>
-                Procéder au paiement</>)}
+              onClick={purchase} disabled={loading || !selectedPack}>
+              {selectedPack
+                ? `${loading ? 'Achat…' : 'Acheter'} — ${selectedPack.name} (${selectedPack.count} tickets)`
+                : 'Sélectionnez une catégorie'}
             </button>
 
             <div id="successMsg" className="alert alert-success mt-4 inline-style-93b8ea5b" style={{ display: showSuccess ? 'flex' : 'none' }}>
@@ -177,7 +198,7 @@ export default function Tickets() {
                 className="inline-style-5b214b83">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span>Tickets ajoutés avec succès à votre compte ! (Simulation)</span>
+              <span>Tickets ajoutés avec succès à votre compte !</span>
             </div>
           </div>
         </div>
@@ -197,38 +218,18 @@ export default function Tickets() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td data-label="Date" className="text-secondary">01/03/2026</td>
-                  <td data-label="Description" className="inline-style-a5d2baa1">Pack Recruteur</td>
-                  <td data-label="Quantité" className="text-mono inline-style-a07ec474">+50 tickets</td>
-                  <td data-label="Statut"><span className="badge badge-verified">Payé</span></td>
-                  <td data-label="Facture"><Link to="/downloads"
-                    className="action-btn-link inline-style-9bd93d36">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    PDF
-                  </Link></td>
-                </tr>
-                <tr>
-                  <td data-label="Date" className="text-secondary">15/01/2026</td>
-                  <td data-label="Description" className="inline-style-a5d2baa1">Pack Découverte</td>
-                  <td data-label="Quantité" className="text-mono inline-style-a07ec474">+10 tickets</td>
-                  <td data-label="Statut"><span className="badge badge-verified">Payé</span></td>
-                  <td data-label="Facture"><Link to="/downloads"
-                    className="action-btn-link inline-style-9bd93d36">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      strokeWidth="2">
-                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    PDF
-                  </Link></td>
-                </tr>
+                {(purchases || []).map((p, i) => (
+                  <tr key={`${p.date}-${p.desc}-${i}`}>
+                    <td data-label="Date" className="text-secondary">{p.date}</td>
+                    <td data-label="Description" className="inline-style-a5d2baa1">{p.desc}</td>
+                    <td data-label="Quantité" className="text-mono inline-style-a07ec474">{p.qty}</td>
+                    <td data-label="Statut"><span className="badge badge-verified">{p.status}</span></td>
+                    <td data-label="Facture"><Link to="/history" className="action-btn-link inline-style-9bd93d36">Voir</Link></td>
+                  </tr>
+                ))}
+                {(purchases || []).length === 0 && (
+                  <tr><td colSpan="5" className="text-center text-secondary" style={{ padding: 16 }}>Aucun achat pour le moment.</td></tr>
+                )}
               </tbody>
             </table>
           </div>

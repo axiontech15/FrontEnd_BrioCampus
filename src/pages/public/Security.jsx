@@ -42,7 +42,7 @@ export default function Security() {
               traçabilité immuable, confidentialité absolue du candidat.
             </p>
             <div className="d-flex gap-4 mt-6" style={{ flexWrap: 'wrap' }}>
-              <Link to="/audit-logs" className="btn btn-primary">Voir l&apos;audit &amp; traçabilité</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/privacy" className="btn btn-secondary">Politique de confidentialité</Link>
             </div>
             <div className="d-flex gap-4 mt-6" style={{ flexWrap: 'wrap' }}>
@@ -182,7 +182,7 @@ export default function Security() {
             <h2 style={{ color: '#fff', fontSize: 32, margin: '12px 0' }}>Vérifiez vite.<br />Prouvez toujours.</h2>
             <p style={{ color: 'rgba(255,255,255,.7)', maxWidth: 560, margin: '0 auto 24px' }}>Chaque rapport BioCampus est une preuve : source officielle, hash inviolable, horodatage certifié.</p>
             <div className="d-flex justify-content-center gap-4" style={{ flexWrap: 'wrap' }}>
-              <Link to="/register" className="btn btn-primary">Créer un compte entreprise</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/pourquoi" className="btn btn-secondary">Pourquoi BioCampus ?</Link>
             </div>
           </div>

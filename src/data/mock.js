@@ -62,8 +62,9 @@ export const STATUS_BADGE = {
   incomplete: 'badge-incomplete',
 };
 
-// Comptes de démonstration (email + mot de passe) — même formulaire pour recruteur et admin
+// Comptes de démonstration — rôles alignés API : admin | rh | university
 export const USERS = [
-  { email: 'a.dupont@kintalents.cd', password: 'password', name: 'Alexandre Dupont', company: 'Cabinet Kin Talents', role: 'recruteur' },
+  { email: 'a.dupont@kintalents.cd', password: 'password', name: 'Alexandre Dupont', company: 'Cabinet Kin Talents', role: 'rh' },
   { email: 'admin@biocampus.cd', password: 'admin123', name: 'Admin BioCampus', company: 'BioCampus', role: 'admin' },
+  { email: 'registre@unikin.cd', password: 'univ123', name: 'Registre UNIKIN', company: 'Université de Kinshasa', role: 'university' },
 ];

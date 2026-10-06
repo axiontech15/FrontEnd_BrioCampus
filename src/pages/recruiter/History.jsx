@@ -38,7 +38,7 @@ export default function History() {
           </div>
           <div>
             <div className="inline-style-11f1cc33">BioCampus</div>
-            <div className="inline-style-1b6872d7">Espace Recruteur</div>
+            <div className="inline-style-1b6872d7">Espace RH</div>
           </div>
         </Link>
         <nav className="header-nav" id="desktopNav">
@@ -66,11 +66,10 @@ export default function History() {
           <details className="mobile-modules">
             <summary>Modules</summary>
             <div className="mobile-sub">
-              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Recherche diplômé</Link>
               <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
               <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
-              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+              <Link to="/profiles" onClick={() => setNavOpen(false)}>Profils équipe</Link>
             </div>
           </details>
           <div className="inline-style-a8b228df"><Link to="/login" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
@@ -144,7 +143,7 @@ export default function History() {
                 <td data-label="Référence"><span className="text-mono inline-style-8672d510">BC-2026-0483</span>
                 </td>
                 <td data-label="Statut"><span className="badge badge-verified">Certifié conforme</span></td>
-                <td data-label="Action"><Link to="/downloads" className="action-btn-link">Télécharger</Link></td>
+                <td data-label="Action"><Link to="/history" className="action-btn-link">Télécharger</Link></td>
               </tr>
               <tr>
                 <td data-label="Candidat" className="inline-style-a5d2baa1">Sarah Ntumba</td>
@@ -174,7 +173,7 @@ export default function History() {
                 <td data-label="Référence"><span className="text-mono inline-style-8672d510">BC-2026-0210</span>
                 </td>
                 <td data-label="Statut"><span className="badge badge-failed">Non vérifié</span></td>
-                <td data-label="Action"><Link to="/downloads" className="action-btn-link">Voir motif</Link></td>
+                <td data-label="Action"><Link to="/history" className="action-btn-link">Voir motif</Link></td>
               </tr>
             </tbody>
           </table>

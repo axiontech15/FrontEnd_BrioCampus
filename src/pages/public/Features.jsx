@@ -58,7 +58,7 @@ export default function Features() {
               académique, pour les recruteurs comme pour les directions conformité.
             </p>
             <div className="d-flex gap-4 mt-6" style={{ flexWrap: 'wrap' }}>
-              <Link to="/register" className="btn btn-primary">Créer un compte entreprise</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/verification" className="btn btn-secondary">Lancer une vérification</Link>
             </div>
             <div className="hero-stats" style={{ borderTop: '1px solid rgba(255,255,255,.15)', marginTop: 32 }}>
@@ -136,7 +136,7 @@ export default function Features() {
               <h2 className="section-title">Des sources officielles, pas des copies</h2>
               <p className="section-subtitle" style={{ maxWidth: 560 }}>Chaque vérification interroge le registre de l’établissement — aucune base intermédiaire.</p>
             </div>
-            <Link to="/universites" className="btn btn-secondary btn-sm">Voir les universités →</Link>
+            <Link to="/login" className="btn btn-secondary btn-sm">Accéder à la plateforme →</Link>
           </div>
           <div className="table-container">
             <table className="table">
@@ -167,7 +167,7 @@ export default function Features() {
             <h2 style={{ color: '#fff', fontSize: 32, margin: '12px 0' }}>Essayez la vérification<br />en quelques minutes</h2>
             <p style={{ color: 'rgba(255,255,255,.7)', maxWidth: 560, margin: '0 auto 24px' }}>Créez votre compte, créditez vos premiers tickets et lancez votre premier contrôle académique.</p>
             <div className="d-flex justify-content-center gap-4" style={{ flexWrap: 'wrap' }}>
-              <Link to="/register" className="btn btn-primary">Créer un compte entreprise</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/pourquoi" className="btn btn-secondary">Pourquoi BioCampus ?</Link>
             </div>
           </div>

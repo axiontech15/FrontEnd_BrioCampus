@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useHashRoute } from '../../router';
 
 const MODULES = [
-  { to: '/verification', label: 'Vérifier un candidat' },
+  { to: '/verification', label: 'Recherche diplômé' },
   { to: '/tickets', label: 'Tickets' },
-  { to: '/downloads', label: 'Téléchargements' },
   { to: '/history', label: 'Historique' },
-  { to: '/universites', label: 'Universités' },
+  { to: '/profiles', label: 'Profils équipe' },
 ];
 
 export default function ProfileMenu() {
@@ -29,7 +28,7 @@ export default function ProfileMenu() {
 
   return (
     <div className="nav-dropdown" ref={ref}>
-      <Link to="/profile" className={path === '/profile' ? 'active' : ''}>Mon profil</Link>
+      <Link to="/profile" className={path === '/profile' ? 'active' : ''}>Mon compte</Link>
       <button
         type="button"
         className="nav-drop-chevron"

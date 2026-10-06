@@ -6,7 +6,7 @@ export default function AdminComptes() {
   const { adminComptes, setAdminComptes, logAdmin } = useApp();
   const [q, setQ] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
-  const [newCompte, setNewCompte] = useState({ name: '', email: '', role: 'Recruteur', org: '' });
+  const [newCompte, setNewCompte] = useState({ name: '', email: '', role: 'RH', org: '' });
 
   const comptesFiltres = adminComptes.filter((c) => {
     const okQ = `${c.name} ${c.email} ${c.org}`.toLowerCase().includes(q.toLowerCase());
@@ -28,26 +28,26 @@ export default function AdminComptes() {
     if (!newCompte.name || !newCompte.email) return;
     setAdminComptes((cs) => [...cs, { id: Date.now(), ...newCompte, status: 'En attente', lastLogin: '—' }]);
     logAdmin('Compte créé', `${newCompte.email} • rôle ${newCompte.role}`);
-    setNewCompte({ name: '', email: '', role: 'Recruteur', org: '' });
+    setNewCompte({ name: '', email: '', role: 'RH', org: '' });
   };
 
   return (
     <AdminLayout>
       <div className="sa-page-header">
         <div>
-          <div className="sa-breadcrumbs">ADMIN › <span>COMPTES</span></div>
-          <h1 className="sa-page-title">Gestion des comptes</h1>
-          <p className="sa-page-desc">Admins, recruteurs et comptes registres universitaires.</p>
+          <div className="sa-breadcrumbs">ADMIN › <span>UTILISATEURS</span></div>
+          <h1 className="sa-page-title">Gestion des utilisateurs</h1>
+          <p className="sa-page-desc">Créer, consulter, modifier et suspendre les comptes Admin, RH et Université.</p>
         </div>
       </div>
       <div className="card mb-6">
-        <h4 className="mb-4">＋ Créer un compte</h4>
+        <h4 className="mb-4">＋ Créer un utilisateur</h4>
         <form onSubmit={addCompte} className="d-flex gap-4" style={{ flexWrap: 'wrap' }}>
           <input className="form-control" style={{ maxWidth: 200 }} placeholder="Nom complet" value={newCompte.name} onChange={(e) => setNewCompte({ ...newCompte, name: e.target.value })} required />
           <input className="form-control" style={{ maxWidth: 240 }} placeholder="Email" type="email" value={newCompte.email} onChange={(e) => setNewCompte({ ...newCompte, email: e.target.value })} required />
           <input className="form-control" style={{ maxWidth: 220 }} placeholder="Organisation" value={newCompte.org} onChange={(e) => setNewCompte({ ...newCompte, org: e.target.value })} />
           <select className="form-control" style={{ maxWidth: 160 }} value={newCompte.role} onChange={(e) => setNewCompte({ ...newCompte, role: e.target.value })}>
-            <option>Recruteur</option><option>Université</option><option>Admin</option>
+            <option>RH</option><option>Université</option><option>Admin</option>
           </select>
           <button className="btn btn-primary btn-sm" type="submit">Créer</button>
         </form>
@@ -57,7 +57,7 @@ export default function AdminComptes() {
           <input placeholder="Rechercher nom, email, organisation..." value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <select className="form-control" style={{ maxWidth: 180 }} value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
-          <option value="all">Tous les rôles</option><option>Admin</option><option>Recruteur</option><option>Université</option>
+          <option value="all">Tous les rôles</option><option>Admin</option><option>RH</option><option>Université</option>
         </select>
       </div>
       <div className="sa-table-container">

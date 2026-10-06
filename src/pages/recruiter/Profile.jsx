@@ -55,7 +55,7 @@ export default function Profile() {
           </div>
           <div>
             <div className="inline-style-11f1cc33">BioCampus</div>
-            <div className="inline-style-1b6872d7">Espace Recruteur</div>
+            <div className="inline-style-1b6872d7">Espace RH</div>
           </div>
         </Link>
         <nav className="header-nav" id="desktopNav">
@@ -83,11 +83,10 @@ export default function Profile() {
           <details className="mobile-modules">
             <summary>Modules</summary>
             <div className="mobile-sub">
-              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Recherche diplômé</Link>
               <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
               <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
-              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+              <Link to="/profiles" onClick={() => setNavOpen(false)}>Profils équipe</Link>
             </div>
           </details>
           <div className="inline-style-a8b228df"><Link to="/login" className="inline-style-16eb5b7d" onClick={() => setNavOpen(false)}>Déconnexion</Link></div>
@@ -100,7 +99,7 @@ export default function Profile() {
           <div className="d-flex align-items-center gap-6 inline-style-407bbb32">
             <div className="profile-avatar-big">A</div>
             <div>
-              <div className="inline-style-b53cc9e5">Compte recruteur</div>
+              <div className="inline-style-b53cc9e5">Compte RH</div>
               <div className="inline-style-b7a4c5c9">Alexandre Dupont</div>
               <div className="inline-style-8418396e">Cabinet Kin Talents • Ressources Humaines</div>
             </div>

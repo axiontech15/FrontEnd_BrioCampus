@@ -22,7 +22,7 @@ export default function WhyBioCampus() {
               pour décider en toute confiance.
             </p>
             <div className="d-flex gap-4 mt-6" style={{ flexWrap: 'wrap' }}>
-              <Link to="/register" className="btn btn-primary">Créer un compte entreprise</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/verification" className="btn btn-secondary">Voir une vérification</Link>
             </div>
             <div className="hero-stats" style={{ borderTop: '1px solid rgba(255,255,255,.15)', marginTop: 32 }}>
@@ -152,7 +152,7 @@ export default function WhyBioCampus() {
                 <div className="section-label">Registre national</div>
                 <h2 className="section-title">Un réseau académique en pleine croissance</h2>
               </div>
-              <Link to="/universites" className="btn btn-secondary btn-sm">Voir les universités →</Link>
+              <Link to="/login" className="btn btn-secondary btn-sm">Accéder à la plateforme →</Link>
             </div>
             <div className="grid-4 mb-6">
               <div className="card text-center"><div className="stat-number">{UNIVERSITIES.length * 10}+</div><p className="text-secondary" style={{ fontSize: 12 }}>Établissements interconnectés</p></div>
@@ -257,7 +257,7 @@ export default function WhyBioCampus() {
             <h2 style={{ color: '#fff', fontSize: 32, margin: '12px 0' }}>Prêt à sécuriser vos<br />recrutements académiques ?</h2>
             <p style={{ color: 'rgba(255,255,255,.7)', maxWidth: 560, margin: '0 auto 24px' }}>Rejoignez plus de 1 200 DRH, cabinets et entreprises qui authentifient leurs talents en toute sérénité.</p>
             <div className="d-flex justify-content-center gap-4" style={{ flexWrap: 'wrap' }}>
-              <Link to="/register" className="btn btn-primary">Créer un compte entreprise</Link>
+              <Link to="/login" className="btn btn-primary">Se connecter</Link>
               <Link to="/securite" className="btn btn-secondary">Découvrir notre sécurité</Link>
             </div>
             <div className="d-flex justify-content-center gap-6 mt-6" style={{ color: 'rgba(255,255,255,.6)', fontSize: 12, flexWrap: 'wrap' }}>

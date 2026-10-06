@@ -4,7 +4,8 @@ import ProfileMenu from './ProfileMenu';
 import { useApp } from '../../context/AppContext';
 
 export default function Dashboard() {
-  const { tickets } = useApp();
+  const { tickets, profilesViewed, adminCategories } = useApp();
+  const activeCategories = (adminCategories || []).filter((c) => c.status === 'ACTIVE');
   const [navOpen, setNavOpen] = useState(false);
   const [filter, setFilter] = useState('all');
   const [q, setQ] = useState('');
@@ -42,7 +43,7 @@ export default function Dashboard() {
           <Link to="/dashboard" className="db-logo">
             <img className="brand-logo-full" src="assets/logo-biocampus.svg" alt="BRIO CAMPUS" />
             <div>
-              <div className="db-logo-sub">Espace Recruteur</div>
+              <div className="db-logo-sub">Espace RH</div>
             </div>
           </Link>
 
@@ -72,7 +73,7 @@ export default function Dashboard() {
               <circle cx="11" cy="11" r="8" />
               <path d="M21 21l-4.35-4.35" />
             </svg>
-            Vérifier un candidat
+            Recherche diplômé
           </Link>
 
           <Link to="/profile" className="db-avatar" title="Mon profil">A</Link>
@@ -96,18 +97,17 @@ export default function Dashboard() {
           <button className="mobile-nav-close" id="mobileNavClose" onClick={() => setNavOpen(false)}>✕</button>
           <div className="inline-style-09edb925">
             <div className="inline-style-4f55aa45">BioCampus</div>
-            <div className="inline-style-65b7efb1">Espace Recruteur</div>
+            <div className="inline-style-65b7efb1">Espace RH</div>
           </div>
           <Link to="/dashboard" className="active" onClick={() => setNavOpen(false)}>Dashboard</Link>
           <Link to="/profile" onClick={() => setNavOpen(false)}>Mon profil</Link>
           <details className="mobile-modules">
             <summary>Modules</summary>
             <div className="mobile-sub">
-              <Link to="/verification" onClick={() => setNavOpen(false)}>Vérifier un candidat</Link>
+              <Link to="/verification" onClick={() => setNavOpen(false)}>Recherche diplômé</Link>
               <Link to="/tickets" onClick={() => setNavOpen(false)}>Tickets</Link>
-              <Link to="/downloads" onClick={() => setNavOpen(false)}>Téléchargements</Link>
               <Link to="/history" onClick={() => setNavOpen(false)}>Historique</Link>
-              <Link to="/universites" onClick={() => setNavOpen(false)}>Universités</Link>
+              <Link to="/profiles" onClick={() => setNavOpen(false)}>Profils équipe</Link>
             </div>
           </details>
           <div className="inline-style-b376803d">
@@ -165,7 +165,7 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <h3>Vérifier un candidat</h3>
+              <h3>Recherche diplômé</h3>
               <p>Interrogez en direct les universités et écoles partenaires pour authentifier diplômes et
                 parcours.</p>
             </div>
@@ -174,7 +174,7 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {/* Card 2: Tickets */}
+          {/* Card 2: Tickets + catégories / quantités */}
           <div className="db-action-card inline-style-4cb8ceeb">
             <div className="card-active-badge">Actif</div>
             <div className="card-icon inline-style-3063e775">
@@ -187,31 +187,36 @@ export default function Dashboard() {
               <h3>Tickets disponibles</h3>
               <div className="ticket-highlight ticket-count-num inline-style-49bda04d">{tickets}</div>
               <small className="inline-style-b3b75445">tickets</small>
-              <p className="inline-style-ff6eee77">1 ticket = 1 vérification certifiée sans expiration dans le réseau
-                souverain.</p>
+              <p className="inline-style-ff6eee77">Packs (catégorie → quantité) :</p>
+              <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 13 }}>
+                {activeCategories.length === 0 && <li className="text-secondary">Aucune catégorie active</li>}
+                {activeCategories.map((c) => (
+                  <li key={c.id}><strong>{c.name}</strong> — {c.quantity ?? 1} tickets</li>
+                ))}
+              </ul>
             </div>
             <Link to="/tickets" className="btn btn-secondary inline-style-8588e44d">
               Gérer mes tickets →
             </Link>
           </div>
 
-          {/* Card 3: Téléchargements */}
+          {/* Card 3: Stats RH */}
           <div className="db-action-card">
             <div className="card-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="12" y1="18" x2="12" y2="12" />
-                <polyline points="9 15 12 18 15 15" />
+                <path d="M18 20V10" /><path d="M12 20V4" /><path d="M6 20v-6" />
               </svg>
             </div>
             <div>
-              <h3>Téléchargements &amp; Rapports</h3>
-              <p>Accédez aux attestations d&apos;authenticité horodatées et rapports d&apos;audit au format PDF sécurisé.
+              <h3>Statistiques RH</h3>
+              <div className="ticket-highlight ticket-count-num inline-style-49bda04d">{profilesViewed}</div>
+              <small className="inline-style-b3b75445">profils consultés</small>
+              <p className="inline-style-ff6eee77">
+                Tickets restants : <strong>{tickets}</strong> — recherches abouties enregistrées automatiquement.
               </p>
             </div>
-            <Link to="/downloads" className="btn btn-secondary inline-style-8588e44d">
-              Consulter les documents ↓
+            <Link to="/profiles" className="btn btn-secondary inline-style-8588e44d">
+              Gérer les profils →
             </Link>
           </div>
         </div>
@@ -307,7 +312,7 @@ export default function Dashboard() {
                     <td><span className="ref-code">BC-2024-8891</span></td>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <Link to="/downloads" className="action-btn-link">Voir le détail</Link>
+                        <Link to="/history" className="action-btn-link">Voir le détail</Link>
                         <button className="btn-icon" data-tooltip="Copier la référence"
                           onClick={() => navigator.clipboard.writeText('BC-2024-8891')}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -355,7 +360,7 @@ export default function Dashboard() {
                     <td><span className="ref-code">BC-2024-8742</span></td>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <Link to="/downloads" className="action-btn-link">Voir le détail</Link>
+                        <Link to="/history" className="action-btn-link">Voir le détail</Link>
                         <button className="btn-icon" data-tooltip="Copier"
                           onClick={() => navigator.clipboard.writeText('BC-2024-8742')}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -449,7 +454,7 @@ export default function Dashboard() {
                     <td><span className="ref-code">BC-2024-8511</span></td>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <Link to="/downloads" className="action-btn-link">Voir le détail</Link>
+                        <Link to="/history" className="action-btn-link">Voir le détail</Link>
                         <button className="btn-icon" data-tooltip="Copier"
                           onClick={() => navigator.clipboard.writeText('BC-2024-8511')}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
