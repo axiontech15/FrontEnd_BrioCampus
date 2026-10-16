@@ -1,25 +1,8 @@
-import { useEffect } from 'react';
 import { Link } from '../../router';
 import PublicHeader from './PublicHeader';
 import { IconLock, IconShield, IconUsers } from '../../components/icons';
 
 export default function Landing() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
-    els.forEach((el) => { el.style.opacity = '0'; });
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (en.isIntersecting) {
-          en.target.classList.add('animate-fade-in-up');
-          en.target.style.opacity = '1';
-          io.unobserve(en.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
   return (
     <>
       <PublicHeader />
@@ -31,15 +14,14 @@ export default function Landing() {
           <div className="landing-hero-inner container">
             <p className="landing-brand-mark">BioCampus</p>
             <h1 id="landing-hero-title" className="landing-hero-title">
-              La vérification des diplômes,<br />
-              <span>à portée de main.</span>
+              Les parcours du campus,<br />
+              <span>en un seul espace.</span>
             </h1>
             <p className="landing-hero-lead">
-              Connectez les ressources humaines aux registres officiels des universités congolaises —
-              pour recruter en confiance.
+              Une interface de démonstration pour explorer les espaces RH, administration et université.
             </p>
             <div className="landing-hero-cta">
-              <Link to="/login" className="btn btn-primary">Se connecter</Link>
+              <Link to="/login" className="btn btn-primary">Explorer la démo</Link>
               <Link to="/fonctionnalites" className="btn btn-secondary landing-btn-ghost">Voir les fonctionnalités</Link>
             </div>
           </div>

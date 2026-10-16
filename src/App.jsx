@@ -1,9 +1,7 @@
-import { AppProvider, useApp } from './context/AppContext';
+import { AppProvider } from './context/AppContext';
 import { Link, useHashRoute } from './router';
 import Landing from './pages/public/Landing';
 import Login from './pages/public/Login';
-import PasswordReset from './pages/public/PasswordReset';
-import OtpVerify from './pages/public/OtpVerify';
 import Dashboard from './pages/recruiter/Dashboard';
 import Verification from './pages/recruiter/Verification';
 import Tickets from './pages/recruiter/Tickets';
@@ -34,69 +32,33 @@ function NotFound() {
   );
 }
 
-function AccessDenied({ message }) {
-  return (
-    <main className="page-wrap text-center">
-      <h1>Accès restreint</h1>
-      <p className="text-secondary mb-6">{message}</p>
-      <Link to="/login" className="btn btn-primary">Se connecter</Link>
-    </main>
-  );
-}
-
-function RequireAdmin({ children }) {
-  const { user } = useApp();
-  if (!user?.loggedIn || user.role !== 'admin') {
-    return <AccessDenied message="L'espace admin nécessite un compte administrateur." />;
-  }
-  return children;
-}
-
-function RequireRH({ children }) {
-  const { user } = useApp();
-  if (!user?.loggedIn || user.role !== 'rh') {
-    return <AccessDenied message="L'espace RH nécessite une connexion avec un compte ressources humaines." />;
-  }
-  return children;
-}
-
-function RequireUniversity({ children }) {
-  const { user } = useApp();
-  if (!user?.loggedIn || user.role !== 'university') {
-    return <AccessDenied message="L'espace université nécessite un compte registre universitaire." />;
-  }
-  return children;
-}
-
 function Shell() {
   const path = useHashRoute();
   switch (path) {
     case '/': return <Landing />;
     case '/login': return <Login />;
-    case '/password-reset': return <PasswordReset />;
-    case '/otp': return <OtpVerify />;
     case '/privacy': return <Privacy />;
     case '/pourquoi': return <WhyBioCampus />;
     case '/securite': return <Security />;
     case '/fonctionnalites': return <Features />;
 
-    case '/dashboard': return <RequireRH><Dashboard /></RequireRH>;
-    case '/verification': return <RequireRH><Verification /></RequireRH>;
-    case '/tickets': return <RequireRH><Tickets /></RequireRH>;
-    case '/history': return <RequireRH><History /></RequireRH>;
-    case '/profile': return <RequireRH><Profile /></RequireRH>;
-    case '/profiles': return <RequireRH><Profiles /></RequireRH>;
+    case '/dashboard': return <Dashboard />;
+    case '/verification': return <Verification />;
+    case '/tickets': return <Tickets />;
+    case '/history': return <History />;
+    case '/profile': return <Profile />;
+    case '/profiles': return <Profiles />;
 
-    case '/admin': return <RequireAdmin><AdminOverview /></RequireAdmin>;
-    case '/admin/comptes': return <RequireAdmin><AdminComptes /></RequireAdmin>;
-    case '/admin/roles': return <RequireAdmin><AdminRoles /></RequireAdmin>;
-    case '/admin/categories': return <RequireAdmin><AdminCategories /></RequireAdmin>;
-    case '/admin/universites': return <RequireAdmin><AdminUniversites /></RequireAdmin>;
-    case '/admin/audit': return <RequireAdmin><AdminAudit /></RequireAdmin>;
+    case '/admin': return <AdminOverview />;
+    case '/admin/comptes': return <AdminComptes />;
+    case '/admin/roles': return <AdminRoles />;
+    case '/admin/categories': return <AdminCategories />;
+    case '/admin/universites': return <AdminUniversites />;
+    case '/admin/audit': return <AdminAudit />;
 
-    case '/university': return <RequireUniversity><UniversityProfile /></RequireUniversity>;
-    case '/university/palmares': return <RequireUniversity><PalmaresImport /></RequireUniversity>;
-    case '/university/stats': return <RequireUniversity><UniversityStats /></RequireUniversity>;
+    case '/university': return <UniversityProfile />;
+    case '/university/palmares': return <PalmaresImport />;
+    case '/university/stats': return <UniversityStats />;
 
     default: return <NotFound />;
   }

@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import AdminLayout from './AdminLayout';
 import { useApp } from '../../context/AppContext';
-import { logsApi } from '../../services/api';
-import { USE_MOCK, formatApiError } from '../../services/config';
 
 export default function AdminAudit() {
-  const { adminAudit, setAdminAudit, logAdmin, syncSessionFromApi } = useApp();
-  const [error, setError] = useState('');
+  const { adminAudit, setAdminAudit, logAdmin } = useApp();
   const active = adminAudit.filter((a) => !a.archived);
   const archived = adminAudit.filter((a) => a.archived);
   const alertCount = active.filter((a) => a.status === 'Alerte').length;
@@ -21,35 +17,15 @@ export default function AdminAudit() {
     URL.revokeObjectURL(url);
   };
 
-  const archiveOld = async () => {
-    setError('');
-    try {
-      if (!USE_MOCK) {
-        await logsApi.archive();
-        await syncSessionFromApi();
-      } else {
-        setAdminAudit((list) => list.map((a) => ({ ...a, archived: true })));
-      }
-      logAdmin('Archivage des journaux', `${active.length} entrée(s) archivée(s)`);
-    } catch (err) {
-      setError(formatApiError(err));
-    }
+  const archiveOld = () => {
+    setAdminAudit((list) => list.map((a) => ({ ...a, archived: true })));
+    logAdmin('Archivage des journaux', `${active.length} entrée(s) archivée(s)`);
   };
 
-  const purgeArchived = async () => {
-    setError('');
+  const purgeArchived = () => {
     const n = archived.length;
-    try {
-      if (!USE_MOCK) {
-        await logsApi.purge();
-        await syncSessionFromApi();
-      } else {
-        setAdminAudit((list) => list.filter((a) => !a.archived));
-      }
-      logAdmin('Purge des journaux archivés', `${n} entrée(s) supprimée(s)`);
-    } catch (err) {
-      setError(formatApiError(err));
-    }
+    setAdminAudit((list) => list.filter((a) => !a.archived));
+    logAdmin('Purge des journaux archivés', `${n} entrée(s) supprimée(s)`);
   };
 
   return (
@@ -70,8 +46,6 @@ export default function AdminAudit() {
           </button>
         </div>
       </div>
-
-      {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
 
       <div className="sa-stats-row">
         <div className="sa-stat-card"><div className="sa-stat-title">ACTIFS</div><div className="sa-stat-val">{active.length}</div></div>

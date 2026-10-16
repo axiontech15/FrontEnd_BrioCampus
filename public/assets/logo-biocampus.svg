@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 48" role="img" aria-labelledby="title">
+  <title id="title">BioCampus</title>
+  <g fill="none" stroke="#7541c8" stroke-width="2">
+    <path d="M5 15 23 5l18 10-18 10L5 15Z"/>
+    <path d="m5 22 18 10 18-10"/>
+    <path d="m5 29 18 10 18-10"/>
+  </g>
+  <text x="54" y="32" fill="#29183b" font-family="Archivo, sans-serif" font-size="27" font-weight="800">BioCampus</text>
+</svg>

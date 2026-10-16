@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from '../../router';
 import ProfileMenu from './ProfileMenu';
 import { useApp } from '../../context/AppContext';
-import { ticketsApi } from '../../services/api';
-import { USE_MOCK, formatApiError } from '../../services/config';
 
 export default function Tickets() {
   const { tickets, setTickets, adminCategories, purchases, setPurchases } = useApp();
   const [navOpen, setNavOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const packs = (adminCategories || []).filter((c) => c.status === 'ACTIVE');
 
   useEffect(() => {
@@ -44,40 +40,18 @@ export default function Tickets() {
     });
   };
 
-  const purchase = async () => {
+  const purchase = () => {
     if (!selectedPack) {
-      setError('Veuillez sélectionner une catégorie / pack.');
       return;
     }
-    setError('');
-    setLoading(true);
-    try {
-      if (!USE_MOCK) {
-        const result = await ticketsApi.purchase({
-          category_id: selectedPack.id,
-          quantity: selectedPack.count,
-          amount: Math.max(1, selectedPack.count),
-        });
-        if (typeof result.remaining_tickets === 'number') {
-          setTickets(result.remaining_tickets);
-        } else {
-          setTickets((t) => t + selectedPack.count);
-        }
-      } else {
-        setTickets((t) => t + selectedPack.count);
-      }
-      const today = new Date().toLocaleDateString('fr-FR');
-      setPurchases((list) => [
-        { date: today, desc: selectedPack.name, qty: `+${selectedPack.count} tickets`, status: 'Payé' },
-        ...(list || []),
-      ]);
-      setShowSuccess(true);
-      setSelectedPack(null);
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setLoading(false);
-    }
+    setTickets((count) => count + selectedPack.count);
+    const today = new Date().toLocaleDateString('fr-FR');
+    setPurchases((list) => [
+      { date: today, desc: selectedPack.name, qty: `+${selectedPack.count} tickets`, status: 'Démo' },
+      ...(list || []),
+    ]);
+    setShowSuccess(true);
+    setSelectedPack(null);
   };
 
   return (
@@ -156,20 +130,16 @@ export default function Tickets() {
               Choisissez une catégorie : la quantité du pack est définie par l&apos;administrateur.
             </p>
 
-            {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
-
             <div className="d-flex flex-column gap-3 mb-6">
               {packs.length === 0 && (
                 <p className="text-secondary">Aucune catégorie active pour le moment.</p>
               )}
               {packs.map((cat, idx) => (
-                <div
+                <button
+                  type="button"
                   key={cat.id}
                   className={`pack-card${idx === 0 ? ' inline-style-4cb8ceeb' : ''}${selectedPack?.id === cat.id ? ' selected' : ''}`}
                   onClick={() => selectPack(cat)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') selectPack(cat); }}
-                  role="button"
-                  tabIndex={0}
                 >
                   {idx === 0 && <span className="pack-popular">Pack</span>}
                   <div className="d-flex justify-content-between align-items-center">
@@ -182,14 +152,14 @@ export default function Tickets() {
                       <div className="inline-style-7ebfadc5">tickets</div>
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
 
             <button type="button" className="btn btn-primary inline-style-8588e44d" id="buyBtn"
-              onClick={purchase} disabled={loading || !selectedPack}>
+              onClick={purchase} disabled={!selectedPack}>
               {selectedPack
-                ? `${loading ? 'Achat…' : 'Acheter'} — ${selectedPack.name} (${selectedPack.count} tickets)`
+                ? `Ajouter — ${selectedPack.name} (${selectedPack.count} tickets)`
                 : 'Sélectionnez une catégorie'}
             </button>
 

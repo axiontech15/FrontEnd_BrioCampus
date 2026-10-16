@@ -20,7 +20,7 @@ const GROUPS = [
 
 export default function AdminLayout({ children }) {
   const path = useHashRoute();
-  const { logout, adminComptes, adminUnis, adminRoles, adminCategories, adminAudit } = useApp();
+  const { adminComptes, adminUnis, adminRoles, adminCategories, adminAudit } = useApp();
   const [sideOpen, setSideOpen] = useState(false);
 
   const current = ADMIN_SECTIONS.find((s) => s.to === path) ?? ADMIN_SECTIONS[0];
@@ -98,7 +98,7 @@ export default function AdminLayout({ children }) {
           </div>
           <div className="sa-topbar-right">
             <div className="sa-topbar-badge">Alertes ({alertCount})</div>
-            <Link to="/login" className="sa-icon-btn-danger" title="Déconnexion" aria-label="Déconnexion" onClick={() => logout()}>
+            <Link to="/login" className="sa-icon-btn-danger" title="Retour à l'entrée de démonstration" aria-label="Retour à l'entrée de démonstration">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />

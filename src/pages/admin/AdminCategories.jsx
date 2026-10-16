@@ -1,54 +1,32 @@
 import { useState } from 'react';
 import AdminLayout from './AdminLayout';
 import { useApp } from '../../context/AppContext';
-import { categoriesApi } from '../../services/api';
-import { USE_MOCK, formatApiError } from '../../services/config';
 
 const emptyForm = { name: '', description: '', quantity: 10 };
 
 export default function AdminCategories() {
-  const { adminCategories, setAdminCategories, logAdmin, syncSessionFromApi } = useApp();
+  const { adminCategories, setAdminCategories, logAdmin } = useApp();
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const save = async (e) => {
+  const save = (e) => {
     e.preventDefault();
     const name = form.name.trim().toUpperCase();
     const quantity = Math.max(1, parseInt(form.quantity, 10) || 1);
     if (!name) return;
-    setError('');
-    setLoading(true);
-    try {
-      if (!USE_MOCK) {
-        const body = { name, description: form.description || null, quantity };
-        if (editId) {
-          await categoriesApi.update(editId, body);
-          logAdmin('Catégorie modifiée', `${name} • qty ${quantity}`);
-        } else {
-          await categoriesApi.create(body);
-          logAdmin('Catégorie créée', `${name} • qty ${quantity}`);
-        }
-        await syncSessionFromApi();
-      } else if (editId) {
-        setAdminCategories((list) => list.map((c) => (
-          c.id === editId ? { ...c, name, description: form.description, quantity } : c
-        )));
-        logAdmin('Catégorie modifiée', `${name} • qty ${quantity}`);
-      } else {
-        setAdminCategories((list) => [...list, {
-          id: Date.now(), name, description: form.description, quantity, status: 'ACTIVE',
-        }]);
-        logAdmin('Catégorie créée', `${name} • qty ${quantity}`);
-      }
-      setEditId(null);
-      setForm(emptyForm);
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setLoading(false);
+    if (editId) {
+      setAdminCategories((list) => list.map((c) => (
+        c.id === editId ? { ...c, name, description: form.description, quantity } : c
+      )));
+      logAdmin('Catégorie modifiée', `${name} • qty ${quantity}`);
+    } else {
+      setAdminCategories((list) => [...list, {
+        id: Date.now(), name, description: form.description, quantity, status: 'ACTIVE',
+      }]);
+      logAdmin('Catégorie créée', `${name} • qty ${quantity}`);
     }
+    setEditId(null);
+    setForm(emptyForm);
   };
 
   const startEdit = (c) => {
@@ -56,35 +34,15 @@ export default function AdminCategories() {
     setForm({ name: c.name, description: c.description || '', quantity: c.quantity ?? 1 });
   };
 
-  const toggle = async (c) => {
-    setError('');
+  const toggle = (c) => {
     const status = c.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    try {
-      if (!USE_MOCK) {
-        await categoriesApi.update(c.id, { status });
-        await syncSessionFromApi();
-      } else {
-        setAdminCategories((list) => list.map((x) => (x.id === c.id ? { ...x, status } : x)));
-      }
-      logAdmin(status === 'ACTIVE' ? 'Catégorie activée' : 'Catégorie désactivée', c.name);
-    } catch (err) {
-      setError(formatApiError(err));
-    }
+    setAdminCategories((list) => list.map((x) => (x.id === c.id ? { ...x, status } : x)));
+    logAdmin(status === 'ACTIVE' ? 'Catégorie activée' : 'Catégorie désactivée', c.name);
   };
 
-  const remove = async (c) => {
-    setError('');
-    try {
-      if (!USE_MOCK) {
-        await categoriesApi.remove(c.id);
-        await syncSessionFromApi();
-      } else {
-        setAdminCategories((list) => list.filter((x) => x.id !== c.id));
-      }
-      logAdmin('Catégorie supprimée', c.name);
-    } catch (err) {
-      setError(formatApiError(err));
-    }
+  const remove = (c) => {
+    setAdminCategories((list) => list.filter((x) => x.id !== c.id));
+    logAdmin('Catégorie supprimée', c.name);
   };
 
   return (
@@ -99,8 +57,6 @@ export default function AdminCategories() {
         </div>
       </div>
 
-      {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
-
       <div className="card mb-6">
         <h4 className="mb-4">{editId ? 'Modifier la catégorie' : '＋ Créer une catégorie'}</h4>
         <form onSubmit={save} style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
@@ -114,7 +70,6 @@ export default function AdminCategories() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              disabled={loading}
             />
           </div>
           <div>
@@ -128,7 +83,6 @@ export default function AdminCategories() {
               value={form.quantity}
               onChange={(e) => setForm({ ...form, quantity: e.target.value })}
               required
-              disabled={loading}
             />
           </div>
           <div style={{ flex: 1, minWidth: 200 }}>
@@ -139,10 +93,9 @@ export default function AdminCategories() {
               placeholder="Description"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              disabled={loading}
             />
           </div>
-          <button className="btn btn-primary btn-sm" type="submit" disabled={loading}>
+          <button className="btn btn-primary btn-sm" type="submit">
             {editId ? 'Enregistrer' : 'Créer'}
           </button>
           {editId && (

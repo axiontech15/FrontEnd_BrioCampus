@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import UniversityLayout from './UniversityLayout';
 import { useApp } from '../../context/AppContext';
-import { universitiesApi } from '../../services/api';
-import { USE_MOCK, formatApiError } from '../../services/config';
 
 const REQUIRED = ['matricule', 'full_name', 'faculty', 'diploma_date'];
 
@@ -47,43 +45,19 @@ function parseCsv(text) {
 export default function PalmaresImport() {
   const { palmares, setPalmares } = useApp();
   const [report, setReport] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const onFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setError('');
-    setLoading(true);
-    try {
-      if (!USE_MOCK) {
-        const result = await universitiesApi.importPalmares(file);
-        setReport({
-          imported: result.imported ?? result.created ?? 0,
-          errors: result.errors || result.details || [],
-        });
-        if (Array.isArray(result.rows)) {
-          setPalmares((list) => {
-            const existing = new Set(list.map((p) => p.matricule));
-            return [...list, ...result.rows.filter((r) => !existing.has(r.matricule))];
-          });
-        }
-      } else {
-        const text = await file.text();
-        const { rows, errors } = parseCsv(text);
-        const existing = new Set(palmares.map((p) => p.matricule));
-        const fresh = rows.filter((r) => !existing.has(r.matricule));
-        const dupExisting = rows.length - fresh.length;
-        if (dupExisting) errors.push(`${dupExisting} ligne(s) déjà présentes dans le registre.`);
-        setPalmares((list) => [...list, ...fresh]);
-        setReport({ imported: fresh.length, errors });
-      }
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setLoading(false);
-      e.target.value = '';
-    }
+    const text = await file.text();
+    const { rows, errors } = parseCsv(text);
+    const existing = new Set(palmares.map((graduate) => graduate.matricule));
+    const fresh = rows.filter((graduate) => !existing.has(graduate.matricule));
+    const duplicates = rows.length - fresh.length;
+    if (duplicates) errors.push(`${duplicates} ligne(s) déjà présentes dans le registre.`);
+    setPalmares((list) => [...list, ...fresh]);
+    setReport({ imported: fresh.length, errors });
+    e.target.value = '';
   };
 
   return (
@@ -93,17 +67,14 @@ export default function PalmaresImport() {
           <div className="sa-breadcrumbs">UNIVERSITÉ › <span>PALMARÈS</span></div>
           <h1 className="sa-page-title">Import du palmarès</h1>
           <p className="sa-page-desc">
-            CSV requis : matricule, full_name, faculty, diploma_date (YYYY-MM-DD)
-            {!USE_MOCK && ' — endpoint /api/universities/palmares/import'}.
+            Import local de démonstration : matricule, full_name, faculty, diploma_date (YYYY-MM-DD).
           </p>
         </div>
       </div>
 
-      {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
-
       <div className="card mb-6">
         <label className="form-label" htmlFor="csv">Fichier CSV</label>
-        <input id="csv" type="file" accept=".csv,text/csv" className="form-control" onChange={onFile} disabled={loading} />
+        <input id="csv" type="file" accept=".csv,text/csv" className="form-control" onChange={onFile} />
       </div>
 
       {report && (

@@ -2,17 +2,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
 
 :root {
-  --bc-blue: #1a3dc8;
-  --bc-blue-dark: #0e236f;
-  --bc-blue-soft: #e3e9ff;
-  --bc-blue-mid: #2b4fd8;
+  --bc-blue: #7541c8;
+  --bc-blue-dark: #29183b;
+  --bc-blue-soft: #f0e8fb;
+  --bc-blue-mid: #935de0;
   --bc-gold: #f5b01a;
-  --bc-ink: #0b1020;
-  --bc-slate: #5b6478;
-  --bc-border: #dce1ef;
+  --bc-ink: #17131c;
+  --bc-slate: #67616e;
+  --bc-border: #e2dce8;
   --bc-surface: #ffffff;
-  --bc-bg: #f4f7fb;
-  --bc-bg-alt: #e8edf7;
+  --bc-bg: #f8f6fa;
+  --bc-bg-alt: #f0ebf4;
   --bc-verified: #0e9f6e;
   --bc-verified-bg: #d6f5e7;
   --bc-verified-text: #0a6b4a;
@@ -21,8 +21,8 @@
   --bc-failed: #d92d20;
   --bc-failed-bg: #fde4e1;
   --bc-radius: 6px;
-  --bc-radius-md: 10px;
-  --bc-radius-lg: 14px;
+  --bc-radius-md: 8px;
+  --bc-radius-lg: 8px;
   --bc-font-ui: "IBM Plex Sans", sans-serif;
   --bc-font-title: "Archivo", sans-serif;
   --bc-font-mono: "IBM Plex Mono", monospace;

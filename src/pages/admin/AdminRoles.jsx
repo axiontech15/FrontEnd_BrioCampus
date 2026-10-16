@@ -1,47 +1,26 @@
 import { useState } from 'react';
 import AdminLayout from './AdminLayout';
 import { useApp } from '../../context/AppContext';
-import { rolesApi } from '../../services/api';
-import { USE_MOCK, formatApiError } from '../../services/config';
 
 export default function AdminRoles() {
-  const { adminRoles, setAdminRoles, logAdmin, syncSessionFromApi } = useApp();
+  const { adminRoles, setAdminRoles, logAdmin } = useApp();
   const [form, setForm] = useState({ name: '', description: '' });
   const [editId, setEditId] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const save = async (e) => {
+  const save = (e) => {
     e.preventDefault();
     const name = form.name.trim().toUpperCase();
     if (!name) return;
-    setError('');
-    setLoading(true);
-    try {
-      if (!USE_MOCK) {
-        if (editId) {
-          await rolesApi.update(editId, { name });
-          logAdmin('Rôle modifié', name);
-        } else {
-          await rolesApi.create({ name });
-          logAdmin('Rôle créé', name);
-        }
-        await syncSessionFromApi();
-      } else if (editId) {
-        setAdminRoles((list) => list.map((r) => (r.id === editId ? { ...r, name, description: form.description } : r)));
-        logAdmin('Rôle modifié', name);
-      } else {
-        if (adminRoles.some((r) => r.name === name)) return;
-        setAdminRoles((list) => [...list, { id: Date.now(), name, description: form.description, users: 0 }]);
-        logAdmin('Rôle créé', name);
-      }
-      setEditId(null);
-      setForm({ name: '', description: '' });
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setLoading(false);
+    if (editId) {
+      setAdminRoles((list) => list.map((r) => (r.id === editId ? { ...r, name, description: form.description } : r)));
+      logAdmin('Rôle modifié', name);
+    } else {
+      if (adminRoles.some((r) => r.name === name)) return;
+      setAdminRoles((list) => [...list, { id: Date.now(), name, description: form.description, users: 0 }]);
+      logAdmin('Rôle créé', name);
     }
+    setEditId(null);
+    setForm({ name: '', description: '' });
   };
 
   const startEdit = (r) => {
@@ -49,23 +28,10 @@ export default function AdminRoles() {
     setForm({ name: r.name, description: r.description || '' });
   };
 
-  const remove = async (r) => {
+  const remove = (r) => {
     if (r.users > 0) return;
-    setError('');
-    setLoading(true);
-    try {
-      if (!USE_MOCK) {
-        await rolesApi.remove(r.id);
-        await syncSessionFromApi();
-      } else {
-        setAdminRoles((list) => list.filter((x) => x.id !== r.id));
-      }
-      logAdmin('Rôle supprimé', r.name);
-    } catch (err) {
-      setError(formatApiError(err));
-    } finally {
-      setLoading(false);
-    }
+    setAdminRoles((list) => list.filter((x) => x.id !== r.id));
+    logAdmin('Rôle supprimé', r.name);
   };
 
   return (
@@ -75,13 +41,10 @@ export default function AdminRoles() {
           <div className="sa-breadcrumbs">ADMIN › <span>RÔLES</span></div>
           <h1 className="sa-page-title">Gestion des rôles</h1>
           <p className="sa-page-desc">
-            Créer, consulter, modifier et supprimer les rôles
-            {!USE_MOCK && ' (synchronisé avec FastAPI /api/roles)'}.
+            Créer, consulter, modifier et supprimer les rôles de démonstration.
           </p>
         </div>
       </div>
-
-      {error && <div className="alert alert-danger mb-4" role="alert"><span>{error}</span></div>}
 
       <div className="card mb-6">
         <h4 className="mb-4">{editId ? 'Modifier le rôle' : '＋ Créer un rôle'}</h4>
@@ -93,18 +56,15 @@ export default function AdminRoles() {
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
-            disabled={loading}
           />
-          {USE_MOCK && (
-            <input
-              className="form-control"
-              style={{ maxWidth: 360 }}
-              placeholder="Description"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-            />
-          )}
-          <button className="btn btn-primary btn-sm" type="submit" disabled={loading}>
+          <input
+            className="form-control"
+            style={{ maxWidth: 360 }}
+            placeholder="Description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+          <button className="btn btn-primary btn-sm" type="submit">
             {editId ? 'Enregistrer' : 'Créer'}
           </button>
           {editId && (
@@ -127,8 +87,8 @@ export default function AdminRoles() {
                 <td>{r.description || '—'}</td>
                 <td>{r.users ?? '—'}</td>
                 <td style={{ display: 'flex', gap: 8 }}>
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(r)} disabled={loading}>Modifier</button>
-                  <button type="button" className="btn btn-secondary btn-sm" disabled={loading || (r.users > 0)} onClick={() => remove(r)}>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(r)}>Modifier</button>
+                  <button type="button" className="btn btn-secondary btn-sm" disabled={r.users > 0} onClick={() => remove(r)}>
                     Supprimer
                   </button>
                 </td>
